@@ -49,13 +49,64 @@ document.addEventListener('DOMContentLoaded', function() {
         observer.observe(card);
     });
 
-    // Mobile menu toggle (if needed in the future)
+    // Mobile menu toggle
     const navToggle = document.querySelector('.nav-toggle');
     const navLinks = document.querySelector('.nav-links');
     
-    if (navToggle) {
+    if (navToggle && navLinks) {
         navToggle.addEventListener('click', () => {
             navLinks.classList.toggle('nav-open');
+            
+            // Update aria-expanded for accessibility
+            const isOpen = navLinks.classList.contains('nav-open');
+            navToggle.setAttribute('aria-expanded', isOpen);
+            
+            // Change icon when menu is open
+            const icon = navToggle.querySelector('svg');
+            if (isOpen) {
+                icon.innerHTML = `
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                `;
+            } else {
+                icon.innerHTML = `
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                `;
+            }
+        });
+        
+        // Close menu when clicking on a link
+        navLinks.addEventListener('click', (e) => {
+            if (e.target.tagName === 'A') {
+                navLinks.classList.remove('nav-open');
+                navToggle.setAttribute('aria-expanded', 'false');
+                
+                // Reset icon
+                const icon = navToggle.querySelector('svg');
+                icon.innerHTML = `
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                `;
+            }
+        });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!navToggle.contains(e.target) && !navLinks.contains(e.target)) {
+                navLinks.classList.remove('nav-open');
+                navToggle.setAttribute('aria-expanded', 'false');
+                
+                // Reset icon
+                const icon = navToggle.querySelector('svg');
+                icon.innerHTML = `
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                `;
+            }
         });
     }
 
