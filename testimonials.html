@@ -5,6 +5,94 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chris Spagnuolo - Testimonials</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Enhanced testimonial styles */
+        .testimonial-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            border-left: 6px solid #667eea;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 50px rgba(102, 126, 234, 0.2);
+            border-left-color: #764ba2;
+        }
+
+        .testimonial-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 1.5rem;
+            line-height: 1.4;
+            border-bottom: 2px solid rgba(102, 126, 234, 0.2);
+            padding-bottom: 0.8rem;
+        }
+
+        .testimonial-quote .highlight {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .testimonial-quote .highlight::before {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            opacity: 0.3;
+            border-radius: 1px;
+        }
+
+        .testimonial-quote {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: #555;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+
+        .author-name {
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 0.2rem;
+            font-size: 1.1rem;
+        }
+
+        .author-title {
+            font-size: 0.95rem;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .author-context {
+            font-size: 0.85rem;
+            color: #888;
+            margin-top: 0.3rem;
+            font-style: italic;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .testimonial-title {
+                font-size: 1.1rem;
+            }
+            
+            .testimonial-card {
+                padding: 2rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -41,10 +129,11 @@
                 
                 <div class="testimonials-grid">
                     <div class="testimonial-card">
+                        <div class="testimonial-title">"The Rare Executive Who Delivers Results & Builds Teams"</div>
                         <div class="testimonial-quote">
-                            "Chris is that rare executive who pairs deep technical and market insight with exceptional people leadership. 
-                            He didn't just delegate, he empowered. He gave me and other leaders true ownership over our domains, backed by unwavering trust. 
-                            Any organization needing a Chief Product Officer who drives results and builds resilient teams would be smart to hire him."
+                            "Chris is that <span class="highlight">rare executive</span> who pairs deep technical and market insight with exceptional people leadership. 
+                            He didn't just delegate, he <span class="highlight">empowered</span>. He gave me and other leaders true ownership over our domains, backed by unwavering trust. 
+                            Any organization needing a Chief Product Officer who <span class="highlight">drives results and builds resilient teams</span> would be smart to hire him."
                         </div>
                         <div class="testimonial-author">
                             <div class="author-info">
@@ -56,10 +145,11 @@
                     </div>
 
                     <div class="testimonial-card">
+                        <div class="testimonial-title">"Board-Level Credibility & Strategic Velocity"</div>
                         <div class="testimonial-quote">
                             "Chris was very credible when presenting to the analysts as well. He was never one to exaggerate or stretch 
-                            the roadmap beyond what was truly planned and by extension we built significant credibility with them. Most of all, 
-                            Chris was all about increasing velocity to deliver products customers wanted."
+                            the roadmap beyond what was truly planned and by extension we built <span class="highlight">significant credibility</span> with them. Most of all, 
+                            Chris was all about <span class="highlight">increasing velocity to deliver products customers wanted</span>."
                         </div>
                         <div class="testimonial-author">
                             <div class="author-info">
@@ -71,10 +161,11 @@
                     </div>
 
                     <div class="testimonial-card">
+                        <div class="testimonial-title">"Holistic Approach & Cross-Departmental Excellence"</div>
                         <div class="testimonial-quote">
-                            "Chris and his team provide a holistic approach to their work. Unlike other outside engagements we have had, 
+                            "Chris and his team provide a <span class="highlight">holistic approach</span> to their work. Unlike other outside engagements we have had, 
                             Chris focused on upstream, downstream, cross-departmental, 'the customer' and other strategic effects of changes 
-                            that we were making. This proved to be a critical step to improved company-wide communication and buy-in to a well executed and successful migration for us."
+                            that we were making. This proved to be a critical step to <span class="highlight">improved company-wide communication and buy-in</span> to a well executed and successful migration for us."
                         </div>
                         <div class="testimonial-author">
                             <div class="author-info">
@@ -95,10 +186,11 @@
                 
                 <div class="testimonials-grid">
                     <div class="testimonial-card">
+                        <div class="testimonial-title">"Strategic & Tactical Engineering Leadership"</div>
                         <div class="testimonial-quote">
-                            "Chris has that rare ability to think both strategically about where the product needs to go and tactically 
-                            about how engineering can best support those goals. He understands that great products aren't just about features – 
-                            they're about building scalable, maintainable systems that can evolve with business needs. He's the kind of leader who makes everyone around them more effective."
+                            "Chris has that rare ability to think both <span class="highlight">strategically about where the product needs to go and tactically 
+                            about how engineering can best support those goals</span>. He understands that great products aren't just about features — 
+                            they're about building <span class="highlight">scalable, maintainable systems</span> that can evolve with business needs. He's the kind of leader who makes everyone around them more effective."
                         </div>
                         <div class="testimonial-author">
                             <div class="author-info">
@@ -110,9 +202,10 @@
                     </div>
 
                     <div class="testimonial-card">
+                        <div class="testimonial-title">"Best Product & Innovation Expert I've Worked With"</div>
                         <div class="testimonial-quote">
-                            "Chris is the best product and innovation expert I have worked with. His expertise, deep knowledge and passion for helping teams and organizations build awesome products is impressive. 
-                            He is able to effectively work with people at all levels of an organization, from C-level executives to people on delivery teams."
+                            "Chris is the <span class="highlight">best product and innovation expert I have worked with</span>. His expertise, deep knowledge and passion for helping teams and organizations build awesome products is impressive. 
+                            He is able to effectively work with people at <span class="highlight">all levels of an organization, from C-level executives to people on delivery teams</span>."
                         </div>
                         <div class="testimonial-author">
                             <div class="author-info">
@@ -124,9 +217,10 @@
                     </div>
 
                     <div class="testimonial-card">
+                        <div class="testimonial-title">"Transformed Product & Company-Wide Impact"</div>
                         <div class="testimonial-quote">
-                            "Chris transformed Product at Valimail and had a tremendously positive impact company-wide. The processes he introduced remain essential: from Design Sprints to company-wide prioritization sessions. 
-                            I learned a lot from Chris about what a highly-functioning Product team looks like."
+                            "Chris <span class="highlight">transformed Product at Valimail and had a tremendously positive impact company-wide</span>. The processes he introduced remain essential: from Design Sprints to company-wide prioritization sessions. 
+                            I learned a lot from Chris about what a <span class="highlight">highly-functioning Product team looks like</span>."
                         </div>
                         <div class="testimonial-author">
                             <div class="author-info">
@@ -147,10 +241,11 @@
                 
                 <div class="testimonials-grid">
                     <div class="testimonial-card">
+                        <div class="testimonial-title">"Strategic Vision & Caring Human Leadership"</div>
                         <div class="testimonial-quote">
                             "His vision for the product and the organization was key in building a strong team and enhancing the quality 
-                            and integrity of the work we did every day. He is the kind of leader that is all too rare: strategic vision 
-                            and caring human leadership in equal measure."
+                            and integrity of the work we did every day. He is the kind of leader that is all too rare: <span class="highlight">strategic vision 
+                            and caring human leadership in equal measure</span>."
                         </div>
                         <div class="testimonial-author">
                             <div class="author-info">
@@ -162,10 +257,11 @@
                     </div>
 
                     <div class="testimonial-card">
+                        <div class="testimonial-title">"AI Innovation & Revenue Growth Catalyst"</div>
                         <div class="testimonial-quote">
-                            "One standout achievement we achieved under his leadership was a strategic initiative that leveraged LLMs to 
-                            pre-fill user data — ultimately increasing our application submission rate by 8%. This is a great example of 
-                            his ability to connect innovative technology to simplify user experiences and increase revenue."
+                            "One standout achievement we achieved under his leadership was a strategic initiative that <span class="highlight">leveraged LLMs to 
+                            pre-fill user data — ultimately increasing our application submission rate by 8%</span>. This is a great example of 
+                            his ability to connect <span class="highlight">innovative technology to simplify user experiences and increase revenue</span>."
                         </div>
                         <div class="testimonial-author">
                             <div class="author-info">
@@ -177,8 +273,9 @@
                     </div>
 
                     <div class="testimonial-card">
+                        <div class="testimonial-title">"Revenue Growth & Team Nurturing Expert"</div>
                         <div class="testimonial-quote">
-                            "Chris is a rare product leader - someone who deeply understands what the buyer and user needs, what tactics and measures to prioritize for revenue growth, and most importantly: how to nurture a product and marketing function. 
+                            "Chris is a rare product leader - someone who deeply understands what the buyer and user needs, what tactics and measures to prioritize for <span class="highlight">revenue growth</span>, and most importantly: how to <span class="highlight">nurture a product and marketing function</span>. 
                             I would work with Chris again if I had the opportunity to do so."
                         </div>
                         <div class="testimonial-author">
@@ -191,9 +288,10 @@
                     </div>
 
                     <div class="testimonial-card">
+                        <div class="testimonial-title">"Multi-Million Dollar Measurable Impact"</div>
                         <div class="testimonial-quote">
                             "Working with Chris at Embroker was an absolute privilege. He constantly stack ranked projects so everyone was clear on priorities, which was very effective. 
-                            He unified product, design, and marketing into a high-performing team that delivered multi-million dollar measurable impact. Chris leads with trust, empowers his teams, and brings out the best in everyone around him."
+                            He unified product, design, and marketing into a high-performing team that delivered <span class="highlight">multi-million dollar measurable impact</span>. Chris leads with trust, <span class="highlight">empowers his teams</span>, and brings out the best in everyone around him."
                         </div>
                         <div class="testimonial-author">
                             <div class="author-info">
@@ -205,9 +303,10 @@
                     </div>
 
                     <div class="testimonial-card">
+                        <div class="testimonial-title">"Highest Engagement Scores Across Organization"</div>
                         <div class="testimonial-quote">
-                            "What always stood out to me was how deeply his team trusted him, and it was because he trusted them first. He built a culture where his leaders and their teams felt empowered to push boundaries, experiment, and grow. 
-                            His team's engagement scores were consistently among the highest across the organization."
+                            "What always stood out to me was how deeply his team trusted him, and it was because he <span class="highlight">trusted them first</span>. He built a culture where his leaders and their teams felt empowered to push boundaries, experiment, and grow. 
+                            His team's <span class="highlight">engagement scores were consistently among the highest across the organization</span>."
                         </div>
                         <div class="testimonial-author">
                             <div class="author-info">
@@ -219,9 +318,10 @@
                     </div>
 
                     <div class="testimonial-card">
+                        <div class="testimonial-title">"World-Class Product Design & Customer Focus"</div>
                         <div class="testimonial-quote">
                             "Since Chris joined Wander as Chief Product Officer he has had a tangible impact on the company and my career. 
-                            He challenged us to broaden our view beyond customer requests to find the underlying pain points that drive world-class product design. 
+                            He challenged us to broaden our view beyond customer requests to find the underlying pain points that drive <span class="highlight">world-class product design</span>. 
                             I consider myself lucky to have Chris as a colleague, mentor, and friend."
                         </div>
                         <div class="testimonial-author">
@@ -243,8 +343,9 @@
                 
                 <div class="testimonials-grid">
                     <div class="testimonial-card">
+                        <div class="testimonial-title">"Tremendous Value & Strategic Product Leadership"</div>
                         <div class="testimonial-quote">
-                            "Chris came to Riot Games for an extensive 1 year plus engagement and added tremendous value. His strength in the craft of Product Management, Strategy, Customer Discovery practices helped elevate our product owners and Chris was instrumental in further refining the League of Legends work system to achieve greater alignment and autonomy."
+                            "Chris came to Riot Games for an extensive 1 year plus engagement and <span class="highlight">added tremendous value</span>. His strength in the craft of Product Management, Strategy, Customer Discovery practices helped elevate our product owners and Chris was instrumental in further refining the League of Legends work system to achieve <span class="highlight">greater alignment and autonomy</span>."
                         </div>
                         <div class="testimonial-author">
                             <div class="author-info">
@@ -256,8 +357,9 @@
                     </div>
 
                     <div class="testimonial-card">
+                        <div class="testimonial-title">"Our Best Decision Yet!"</div>
                         <div class="testimonial-quote">
-                            "Starting our Agile journey with Chris was incredible! By far our best decision yet! Chris is experienced, extremely knowledgeable and passionate. 
+                            "Starting our Agile journey with Chris was incredible! <span class="highlight">By far our best decision yet!</span> Chris is experienced, extremely knowledgeable and passionate. 
                             He is also great with people - very patient!! I can't say enough about how much we enjoyed working with him."
                         </div>
                         <div class="testimonial-author">
@@ -270,9 +372,10 @@
                     </div>
 
                     <div class="testimonial-card">
+                        <div class="testimonial-title">"Transformed How We Think About Product & Customers"</div>
                         <div class="testimonial-quote">
-                            "Chris has changed the way we think about product development and our customer. He is smart and articulate. He is passionate about promoting ideas and philosophies he values, yet flexible in his approach about what an organization can absorb at any given moment. 
-                            Working with Chris, as a consultant, has been one of the best experiences of my career."
+                            "Chris has <span class="highlight">changed the way we think about product development and our customer</span>. He is smart and articulate. He is passionate about promoting ideas and philosophies he values, yet flexible in his approach about what an organization can absorb at any given moment. 
+                            Working with Chris, as a consultant, has been <span class="highlight">one of the best experiences of my career</span>."
                         </div>
                         <div class="testimonial-author">
                             <div class="author-info">
@@ -284,10 +387,11 @@
                     </div>
 
                     <div class="testimonial-card">
+                        <div class="testimonial-title">"Collaborative Approach & Real Customer Value"</div>
                         <div class="testimonial-quote">
-                            "Chris brings a wealth of knowledge and experience, but what impresses me the most is his collaborative and flexible approach. 
+                            "Chris brings a wealth of knowledge and experience, but what impresses me the most is his <span class="highlight">collaborative and flexible approach</span>. 
                             Chris really helped our group lean in, and completely overhaul how we think about our clients and our product strategy. 
-                            I would highly recommend Chris to any organization that needs help figuring out how best to create real value for customers."
+                            I would highly recommend Chris to any organization that needs help figuring out how best to <span class="highlight">create real value for customers</span>."
                         </div>
                         <div class="testimonial-author">
                             <div class="author-info">
