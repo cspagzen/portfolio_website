@@ -190,10 +190,80 @@
     margin-bottom: 0.3rem;
 }
 
-.job-title-company .company {
+.company {
     font-size: 1.1rem;
     color: #667eea;
     font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.stage-badge {
+    font-size: 0.7rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Additional Experience Section */
+.additional-experience {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 2px solid #e9ecef;
+}
+
+.additional-experience h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #667eea;
+    margin-bottom: 2rem;
+}
+
+.additional-job {
+    margin-bottom: 1.5rem;
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-radius: 10px;
+    border-left: 4px solid #667eea;
+}
+
+.additional-job h4 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 0.3rem;
+}
+
+.additional-role {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #667eea;
+    margin-bottom: 0.8rem;
+}
+
+.additional-job p {
+    color: #555;
+    line-height: 1.6;
+}
+
+.additional-summary {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: #e9ecef;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+}
+
+.additional-summary p {
+    color: #666;
+    font-style: italic;
+    margin: 0;
 }
 
 .job-duration {
