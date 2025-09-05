@@ -425,3 +425,14 @@
         grid-template-columns: 1fr;
     }
 }
+
+.additional-job .badge-container {
+    margin: 0.5rem 0;
+}
+
+.additional-job .badge-container .industry-badge,
+.additional-job .badge-container .stage-badge,
+.additional-job .badge-container .strategy-badge {
+    font-size: 0.65rem;
+    padding: 0.25rem 0.6rem;
+}

@@ -775,3 +775,44 @@ nav {
 .logo:hover {
     color: #5a6fd8;
 }
+
+.badge-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.5rem;
+}
+
+.industry-badge {
+    font-size: 0.7rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, #20c997, #17a2b8);
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stage-badge {
+    font-size: 0.7rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.strategy-badge {
+    font-size: 0.7rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
