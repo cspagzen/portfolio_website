@@ -232,14 +232,17 @@ nav {
 }
 
 .cta-button.secondary {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    border: 2px solid transparent;
-    color: white;
+    background: #f8f9fa;
+    border: 2px solid #667eea;
+    color: #667eea;
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
 }
 
 .cta-button.secondary:hover {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #667eea;
+    color: white;
     transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
 }
 
 /* Main Content */
