@@ -763,3 +763,15 @@ nav {
         transform: translateY(-5px) !important;
     }
 }
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #667eea;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.logo:hover {
+    color: #5a6fd8;
+}
