@@ -858,3 +858,42 @@ nav {
     color: #764ba2;
     font-weight: 600;
 }
+
+.testimonials-section .highlight {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 600;
+    position: relative;
+}
+
+.testimonials-section .highlight::before {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    opacity: 0.3;
+    border-radius: 1px;
+}
+
+/* Ensure CTA buttons stay above parallax effects */
+.cta-buttons {
+    position: relative;
+    z-index: 100;
+}
+
+.cta-button {
+    position: relative;
+    z-index: 101;
+}
+
+/* Reduce parallax on smaller screens */
+@media (max-width: 768px) {
+    .hero {
+        transform: none !important;
+    }
+}

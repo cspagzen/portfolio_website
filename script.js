@@ -191,15 +191,18 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Parallax effect for hero section (subtle)
-    window.addEventListener('scroll', () => {
+   // Parallax effect for hero section (desktop only)
+window.addEventListener('scroll', () => {
+    // Only apply parallax on desktop
+    if (window.innerWidth > 768) {
         const scrolled = window.pageYOffset;
         const parallax = document.querySelector('.hero');
         if (parallax && scrolled < window.innerHeight) {
             const speed = scrolled * 0.3;
             parallax.style.transform = `translateY(${speed}px)`;
         }
-    });
+    }
+});
 
     // Performance optimization: Lazy load non-critical elements
     const lazyElements = document.querySelectorAll('.testimonial-card, .content-card');
