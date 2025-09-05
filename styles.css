@@ -816,3 +816,45 @@ nav {
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
+
+/* Enhanced testimonial cards for homepage */
+.testimonials-section .testimonial-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-left: 6px solid transparent;
+    border-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%) 1;
+    position: relative;
+    overflow: hidden;
+}
+
+.testimonials-section .testimonial-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    border-radius: 50%;
+    transform: translate(50%, -50%);
+}
+
+.testimonials-section .testimonial-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
+    border-left-color: #764ba2;
+}
+
+.testimonials-section .testimonial-quote {
+    position: relative;
+    z-index: 2;
+}
+
+.testimonials-section .author-name {
+    color: #667eea;
+    font-weight: 700;
+}
+
+.testimonials-section .author-title {
+    color: #764ba2;
+    font-weight: 600;
+}
