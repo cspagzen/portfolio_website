@@ -5,19 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chris Spagnuolo - Blog</title>
     <link rel="stylesheet" href="styles.css">
+    <!-- Add Lucide CDN -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 </head>
 <body>
     <header>
-    <nav>
-        <a href="index.html" class="logo">Chris Spagnuolo</a>
-        <div class="nav-toggle">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-        <ul class="nav-links">
+        <nav>
+            <div class="logo">Chris Spagnuolo</div>
+            <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
-                <li><a href="resume.html">Experience</a></li>
+                <li><a href="resume.html">Resume</a></li>
                 <li><a href="testimonials.html">Testimonials</a></li>
                 <li><a href="blog.html">Blog</a></li>
                 <li><a href="index.html#contact">Contact</a></li>
@@ -42,7 +39,9 @@
         <section class="section">
             <div class="container">
                 <div style="text-align: center; padding: 4rem 0;">
-                    <div style="font-size: 4rem; margin-bottom: 2rem; opacity: 0.3;">✍️</div>
+                    <div style="font-size: 4rem; margin-bottom: 2rem; opacity: 0.3; display: flex; justify-content: center;">
+                        <i data-lucide="edit-3" style="width: 4rem; height: 4rem;"></i>
+                    </div>
                     <h2 style="font-size: 2.5rem; color: #667eea; margin-bottom: 1rem;">Coming Soon</h2>
                     <p style="font-size: 1.2rem; color: #666; max-width: 600px; margin: 0 auto 2rem;">
                         I'm currently developing content that explores the nuances of product leadership, 
@@ -53,12 +52,30 @@
                     <div style="background: #f8f9fa; padding: 2rem; border-radius: 15px; max-width: 800px; margin: 0 auto; text-align: left;">
                         <h3 style="color: #667eea; margin-bottom: 1rem;">Planned Content Areas:</h3>
                         <ul style="list-style: none; padding: 0;">
-                            <li style="padding: 0.5rem 0; border-bottom: 1px solid #e9ecef;">🎯 <strong>Product Strategy</strong> - From vision to execution in complex markets</li>
-                            <li style="padding: 0.5rem 0; border-bottom: 1px solid #e9ecef;">🤖 <strong>AI/ML in Product</strong> - Practical implementation and user experience considerations</li>
-                            <li style="padding: 0.5rem 0; border-bottom: 1px solid #e9ecef;">👥 <strong>Team Leadership</strong> - Building high-performing product organizations</li>
-                            <li style="padding: 0.5rem 0; border-bottom: 1px solid #e9ecef;">📈 <strong>Growth Strategy</strong> - Go-to-market execution and scaling methodologies</li>
-                            <li style="padding: 0.5rem 0; border-bottom: 1px solid #e9ecef;">🔄 <strong>Organizational Design</strong> - Structuring teams for innovation and delivery</li>
-                            <li style="padding: 0.5rem 0;">🎨 <strong>Design Thinking</strong> - User-centered approaches to complex business problems</li>
+                            <li style="padding: 0.5rem 0; border-bottom: 1px solid #e9ecef; display: flex; align-items: center; gap: 0.8rem;">
+                                <i data-lucide="target" style="width: 1.2rem; height: 1.2rem; color: #667eea; flex-shrink: 0;"></i>
+                                <div><strong>Product Strategy</strong> - From vision to execution in complex markets</div>
+                            </li>
+                            <li style="padding: 0.5rem 0; border-bottom: 1px solid #e9ecef; display: flex; align-items: center; gap: 0.8rem;">
+                                <i data-lucide="cpu" style="width: 1.2rem; height: 1.2rem; color: #667eea; flex-shrink: 0;"></i>
+                                <div><strong>AI/ML in Product</strong> - Practical implementation and user experience considerations</div>
+                            </li>
+                            <li style="padding: 0.5rem 0; border-bottom: 1px solid #e9ecef; display: flex; align-items: center; gap: 0.8rem;">
+                                <i data-lucide="users" style="width: 1.2rem; height: 1.2rem; color: #667eea; flex-shrink: 0;"></i>
+                                <div><strong>Team Leadership</strong> - Building high-performing product organizations</div>
+                            </li>
+                            <li style="padding: 0.5rem 0; border-bottom: 1px solid #e9ecef; display: flex; align-items: center; gap: 0.8rem;">
+                                <i data-lucide="trending-up" style="width: 1.2rem; height: 1.2rem; color: #667eea; flex-shrink: 0;"></i>
+                                <div><strong>Growth Strategy</strong> - Go-to-market execution and scaling methodologies</div>
+                            </li>
+                            <li style="padding: 0.5rem 0; border-bottom: 1px solid #e9ecef; display: flex; align-items: center; gap: 0.8rem;">
+                                <i data-lucide="network" style="width: 1.2rem; height: 1.2rem; color: #667eea; flex-shrink: 0;"></i>
+                                <div><strong>Organizational Design</strong> - Structuring teams for innovation and delivery</div>
+                            </li>
+                            <li style="padding: 0.5rem 0; display: flex; align-items: center; gap: 0.8rem;">
+                                <i data-lucide="palette" style="width: 1.2rem; height: 1.2rem; color: #667eea; flex-shrink: 0;"></i>
+                                <div><strong>Design Thinking</strong> - User-centered approaches to complex business problems</div>
+                            </li>
                         </ul>
                     </div>
 
@@ -89,15 +106,6 @@
                     <div class="content-card">
                         <div class="content-type">Video</div>
                         <div class="content-body">
-                            <h3>Design Thinking in Practice</h3>
-                            <p>Practical applications of design thinking methodologies in product development.</p>
-                            <p><a href="https://www.youtube.com/watch?v=5_Ip-jA4hhg" target="_blank">Watch on YouTube</a></p>
-                        </div>
-                    </div>
-                    
-                    <div class="content-card">
-                        <div class="content-type">Video</div>
-                        <div class="content-body">
                             <h3>Challenges Around Alignment and Autonomy</h3>
                             <p>Balancing team empowerment with strategic coordination in product organizations.</p>
                             <p><a href="https://www.youtube.com/watch?v=iNZN9DGgXYU" target="_blank">Watch on YouTube</a></p>
@@ -105,11 +113,11 @@
                     </div>
                     
                     <div class="content-card">
-                        <div class="content-type">Video</div>
+                        <div class="content-type">Article</div>
                         <div class="content-body">
-                            <h3>Agile 2015 Video Podcast with David Bland</h3>
-                            <p>Discussion on product innovation and agile methodologies at Agile 2015 conference.</p>
-                            <p><a href="https://agilealliance.org/resources/videos/agile-2015-video-podcast-chris-spagnuolo-david-bland/" target="_blank">Watch on Agile Alliance</a></p>
+                            <h3>What Can Haruki Murakami Teach Us About Sustainable Pace?</h3>
+                            <p>Lessons from literature on building sustainable leadership practices and long-term thinking.</p>
+                            <p><a href="https://www.liminalarc.co/2014/11/haruki-murakami-teaches-sustainable-pace/" target="_blank">Read on Liminal Arc</a></p>
                         </div>
                     </div>
                     
@@ -123,20 +131,11 @@
                     </div>
                     
                     <div class="content-card">
-                        <div class="content-type">Podcast</div>
+                        <div class="content-type">Video</div>
                         <div class="content-body">
-                            <h3>Kickstarting Enterprise Innovation</h3>
-                            <p>Building momentum for innovation initiatives within established corporate structures.</p>
-                            <p><a href="https://liminalarcgroup.podbean.com/e/kickstarting-enterprise-innovation-it7-chris-spagnuolo/" target="_blank">Listen on Liminal Arc</a></p>
-                        </div>
-                    </div>
-                    
-                    <div class="content-card">
-                        <div class="content-type">Podcast</div>
-                        <div class="content-body">
-                            <h3>System Design for Innovation Hubs in Large Enterprises</h3>
-                            <p>Architectural approaches to building sustainable innovation capabilities in corporate environments.</p>
-                            <p><a href="https://liminalarcgroup.podbean.com/e/system-design-for-innovation-hubs-in-large-enterprises/" target="_blank">Listen on Liminal Arc</a></p>
+                            <h3>Design Thinking in Practice</h3>
+                            <p>Practical applications of design thinking methodologies in product development.</p>
+                            <p><a href="https://www.youtube.com/watch?v=5_Ip-jA4hhg" target="_blank">Watch on YouTube</a></p>
                         </div>
                     </div>
                     
@@ -146,15 +145,6 @@
                             <h3>Product Vision Tools: The Product Vision Board</h3>
                             <p>Practical frameworks for developing and communicating product vision across organizations.</p>
                             <p><a href="https://www.liminalarc.co/2014/03/product-vision-tools/" target="_blank">Read on Liminal Arc</a></p>
-                        </div>
-                    </div>
-                    
-                    <div class="content-card">
-                        <div class="content-type">Article</div>
-                        <div class="content-body">
-                            <h3>What Can Haruki Murakami Teach Us About Sustainable Pace?</h3>
-                            <p>Lessons from literature on building sustainable leadership practices and long-term thinking.</p>
-                            <p><a href="https://www.liminalarc.co/2014/11/haruki-murakami-teaches-sustainable-pace/" target="_blank">Read on Liminal Arc</a></p>
                         </div>
                     </div>
                 </div>
@@ -183,5 +173,12 @@
     </footer>
 
     <script src="script.js"></script>
+    
+    <!-- Initialize Lucide icons -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            lucide.createIcons();
+        });
+    </script>
 </body>
 </html>
