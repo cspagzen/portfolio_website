@@ -506,6 +506,10 @@ nav {
     gap: 2rem;
 }
 
+#thought-leadership {
+    padding-top: 40px; /* Reduced from default 80px */
+}
+
 .content-card {
     background: white;
     border: 1px solid #e9ecef;
