@@ -6,6 +6,7 @@
     <title>Chris Spagnuolo - Blog</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://unpkg.com/@sanity/client/dist/sanity.js"></script>
     <style>
       .pagination { display:flex; gap:.5rem; align-items:center; justify-content:center; margin-top:1.5rem; }
       .page-link { padding:.5rem .8rem; border:1px solid #e1e5ee; border-radius:8px; text-decoration:none; color:#333; }
@@ -163,62 +164,140 @@
         console.error(err);
       }
 
-      async function renderPosts() {
-        const container = document.getElementById('latest-posts');
-        const pager = document.getElementById('pager');
+      document.addEventListener('DOMContentLoaded', function() { 
+  if (window.lucide) lucide.createIcons(); 
 
-        try {
-          const res = await fetch('./posts/posts.json', { cache: 'no-store' });
-          if (!res.ok) throw new Error('Failed to load posts.json: ' + res.status + ' ' + res.statusText);
-          const items = await res.json();
+  // Initialize Sanity client with your project details
+  const client = sanityClient({
+    projectId: 'bcqvqm54',
+    dataset: 'production',
+    useCdn: true,
+    apiVersion: '2024-01-01'
+  });
 
-          // Use the order from posts.json (already sorted newest to oldest)
-const posts = items.slice();
+  const PAGE_SIZE = 6;
 
-          const page = getPageParam();
-          const total = posts.length;
-          const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
-          const start = (page - 1) * PAGE_SIZE;
-          const slice = posts.slice(start, start + PAGE_SIZE);
+  function getPageParam() {
+    const url = new URL(window.location.href);
+    const p = parseInt(url.searchParams.get('page') || '1', 10);
+    return isNaN(p) || p < 1 ? 1 : p;
+  }
 
-          container.innerHTML = slice.map(p => `
-            <article class="content-card">
-              <div class="content-type">Article</div>
-              <div class="content-body">
-                <h3><a href="./posts/${p.filename}">${p.title}</a></h3>
-                <p class="muted" style="color:#666; margin:.25rem 0 0.6rem;">${p.date}</p>
-                <p>${p.excerpt}</p>
-                <p style="margin-top:.6rem;">
-                  <a href="./posts/${p.filename}">Read the full article</a>
-                </p>
-              </div>
-            </article>
-          `).join('');
+  function formatDate(dateString) {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  }
 
-          function link(pageNum, label, disabled=false, active=false) {
-            const cls = ['page-link'];
-            if (disabled) cls.push('disabled');
-            if (active) cls.push('active');
-            const q = new URLSearchParams(window.location.search);
-            q.set('page', pageNum);
-            const href = `?${q.toString()}`;
-            return `<a class="${cls.join(' ')}" href="${href}">${label}</a>`;
-          }
+  function showError(err) {
+    const el = document.getElementById('error-log');
+    if (el) {
+      el.style.display = 'block';
+      el.textContent = String(err);
+    }
+    console.error(err);
+  }
 
-          let html = '';
-          html += link(Math.max(1, page-1), 'Prev', page===1);
-          for (let i=1;i<=pages;i++) html += link(i, i, false, i===page);
-          html += link(Math.min(pages, page+1), 'Next', page===pages);
-          pager.innerHTML = html;
+  async function renderPosts() {
+    const container = document.getElementById('latest-posts');
+    const pager = document.getElementById('pager');
 
-        } catch(e) {
-          showError(e);
-          container.innerHTML = '<p>Unable to load posts right now.</p>';
-          pager.innerHTML = '';
+    try {
+      const page = getPageParam();
+      const start = (page - 1) * PAGE_SIZE;
+
+      // Fetch posts from Sanity
+      const query = `
+        *[_type == "post" && defined(publishedAt)] | order(publishedAt desc) [${start}...${start + PAGE_SIZE}] {
+          title,
+          slug,
+          excerpt,
+          publishedAt,
+          body,
+          "plainTextExcerpt": pt::text(body)[0...150]
         }
+      `;
+
+      const totalQuery = `count(*[_type == "post" && defined(publishedAt)])`;
+      
+      const [posts, total] = await Promise.all([
+        client.fetch(query),
+        client.fetch(totalQuery)
+      ]);
+
+      const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+
+      // Render blog post cards
+      container.innerHTML = posts.map(post => `
+        <article class="content-card">
+          <div class="content-type">Article</div>
+          <div class="content-body">
+            <h3><a href="/blog/${post.slug.current}">${post.title}</a></h3>
+            <p class="muted" style="color:#666; margin:.25rem 0 0.6rem; font-size: 0.9rem;">
+              ${formatDate(post.publishedAt)}
+            </p>
+            <p>${post.excerpt || post.plainTextExcerpt || ''}</p>
+            <p style="margin-top:.6rem;">
+              <a href="/blog/${post.slug.current}">Read the full article</a>
+            </p>
+          </div>
+        </article>
+      `).join('');
+
+      // Generate pagination controls
+      function createPageLink(pageNum, label, disabled = false, active = false) {
+        const cls = ['page-link'];
+        if (disabled) cls.push('disabled');
+        if (active) cls.push('active');
+        
+        if (disabled) {
+          return `<span class="${cls.join(' ')}">${label}</span>`;
+        }
+        
+        const q = new URLSearchParams(window.location.search);
+        q.set('page', pageNum);
+        const href = `?${q.toString()}`;
+        return `<a class="${cls.join(' ')}" href="${href}">${label}</a>`;
       }
 
-      renderPosts();
+      let paginationHtml = '';
+      paginationHtml += createPageLink(Math.max(1, page - 1), '← Previous', page === 1);
+      
+      const startPage = Math.max(1, page - 2);
+      const endPage = Math.min(pages, page + 2);
+      
+      if (startPage > 1) {
+        paginationHtml += createPageLink(1, '1');
+        if (startPage > 2) {
+          paginationHtml += '<span class="page-ellipsis">...</span>';
+        }
+      }
+      
+      for (let i = startPage; i <= endPage; i++) {
+        paginationHtml += createPageLink(i, i, false, i === page);
+      }
+      
+      if (endPage < pages) {
+        if (endPage < pages - 1) {
+          paginationHtml += '<span class="page-ellipsis">...</span>';
+        }
+        paginationHtml += createPageLink(pages, pages);
+      }
+      
+      paginationHtml += createPageLink(Math.min(pages, page + 1), 'Next →', page === pages);
+      pager.innerHTML = paginationHtml;
+
+    } catch(e) {
+      showError('Error loading posts: ' + e.message);
+      container.innerHTML = '<p>Unable to load posts right now.</p>';
+      pager.innerHTML = '';
+    }
+  }
+
+  renderPosts();
+});
     </script>
 </body>
 </html>
