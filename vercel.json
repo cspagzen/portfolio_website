@@ -1,0 +1,13 @@
+{
+  "functions": {
+    "api/blog-post.js": {
+      "memory": 1024
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/blog/:slug",
+      "destination": "/api/blog-post?slug=:slug"
+    }
+  ]
+}
