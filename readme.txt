@@ -1,1 +1,1 @@
-blah blah di blah di blah blah blah
+blah blah di blah di blah
