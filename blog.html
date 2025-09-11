@@ -232,7 +232,7 @@
           <article class="content-card">
             <div class="content-type">Article</div>
             <div class="content-body">
-              <h3><a href="/blog/${post.slug?.current || 'post'}">${post.title || 'Untitled'}</a></h3>
+              <h3><a href="blog-post.html?slug=${post.slug?.current || 'post'}">${post.title || 'Untitled'}</a></h3>
               <p class="muted" style="color:#666; margin:.25rem 0 0.6rem; font-size: 0.9rem;">
                 ${post.publishedAt ? formatDate(post.publishedAt) : 'No date'}
               </p>

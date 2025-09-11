@@ -177,38 +177,41 @@
             
             // Convert Sanity rich text blocks to HTML
             function blocksToHtml(blocks) {
-                if (!blocks || !Array.isArray(blocks)) return '';
+    if (!blocks || !Array.isArray(blocks)) return '';
+    
+    return blocks.map(block => {
+        if (block._type === 'block') {
+            const style = block.style || 'normal';
+            const children = block.children || [];
+            
+            const text = children.map(child => {
+                let text = child.text || '';
                 
-                return blocks.map(block => {
-                    if (block._type === 'block') {
-                        const style = block.style || 'normal';
-                        const children = block.children || [];
-                        
-                        const text = children.map(child => {
-                            let text = child.text || '';
-                            
-                            // Apply marks (bold, italic, etc.)
-                            if (child.marks && child.marks.length > 0) {
-                                child.marks.forEach(mark => {
-                                    if (mark === 'strong') text = `<strong>${text}</strong>`;
-                                    if (mark === 'em') text = `<em>${text}</em>`;
-                                });
-                            }
-                            
-                            return text;
-                        }).join('');
-                        
-                        // Apply block styles
-                        switch (style) {
-                            case 'h2': return `<h2>${text}</h2>`;
-                            case 'h3': return `<h3>${text}</h3>`;
-                            case 'blockquote': return `<blockquote>${text}</blockquote>`;
-                            default: return `<p>${text}</p>`;
-                        }
-                    }
-                    return '';
-                }).join('');
+                // Apply marks (bold, italic, etc.)
+                if (child.marks && child.marks.length > 0) {
+                    child.marks.forEach(mark => {
+                        if (mark === 'strong') text = `<strong>${text}</strong>`;
+                        if (mark === 'em') text = `<em>${text}</em>`;
+                    });
+                }
+                
+                return text;
+            }).join('');
+            
+            // Handle line breaks properly
+            if (!text.trim()) return '';
+            
+            // Apply block styles
+            switch (style) {
+                case 'h2': return `<h2>${text}</h2>`;
+                case 'h3': return `<h3>${text}</h3>`;
+                case 'blockquote': return `<blockquote>${text}</blockquote>`;
+                default: return `<p>${text}</p>`;
             }
+        }
+        return '';
+    }).filter(html => html.trim()).join('\n');
+}
             
             function extractPlainText(blocks) {
                 if (!blocks || !Array.isArray(blocks)) return '';
