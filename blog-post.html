@@ -46,22 +46,57 @@
             color: #333;
         }
         
+        .post-content h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #667eea;
+            margin: 3rem 0 1.5rem;
+            line-height: 1.2;
+        }
+        
         .post-content h2 {
             font-size: 1.8rem;
             font-weight: 700;
             color: #667eea;
             margin: 2.5rem 0 1rem;
+            line-height: 1.3;
         }
         
         .post-content h3 {
             font-size: 1.4rem;
             font-weight: 600;
-            color: #333;
+            color: #764ba2;
             margin: 2rem 0 0.8rem;
+            line-height: 1.3;
+        }
+        
+        .post-content h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin: 1.5rem 0 0.6rem;
+            line-height: 1.3;
+        }
+        
+        .post-content h5 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin: 1.5rem 0 0.5rem;
+            line-height: 1.3;
+        }
+        
+        .post-content h6 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #555;
+            margin: 1.5rem 0 0.5rem;
+            line-height: 1.3;
         }
         
         .post-content p {
             margin-bottom: 1.5rem;
+            line-height: 1.8;
         }
         
         .post-content ul, .post-content ol {
@@ -70,15 +105,26 @@
         }
         
         .post-content li {
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.8rem;
+            line-height: 1.7;
         }
         
         .post-content blockquote {
             border-left: 4px solid #667eea;
             padding: 1rem 1.5rem;
             margin: 2rem 0;
-            background: #f8f9ff;
+            background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
             font-style: italic;
+            color: #555;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .post-content strong {
+            color: #333;
+            font-weight: 700;
+        }
+        
+        .post-content em {
             color: #555;
         }
         
@@ -90,11 +136,16 @@
             text-decoration: none;
             font-weight: 500;
             margin-bottom: 2rem;
-            transition: color 0.3s ease;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            border: 1px solid rgba(102, 126, 234, 0.2);
         }
         
         .back-link:hover {
-            color: #5a6fd8;
+            color: white;
+            background: #667eea;
+            transform: translateY(-1px);
         }
         
         .loading, .error {
@@ -105,6 +156,9 @@
         
         .error {
             color: #d63384;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #d63384;
         }
     </style>
 </head>
@@ -175,60 +229,84 @@
                 });
             }
             
-            // Convert Sanity rich text blocks to HTML
+            // Complete heading support: h1, h2, h3, h4, h5, h6 + all formatting
             function blocksToHtml(blocks) {
-    if (!blocks || !Array.isArray(blocks)) return '';
-    
-    return blocks.map(block => {
-        if (block._type === 'block') {
-            const style = block.style || 'normal';
-            const children = block.children || [];
-            
-            const text = children.map(child => {
-                let text = child.text || '';
+                if (!blocks || !Array.isArray(blocks)) return '<p>No content available.</p>';
                 
-                // Apply marks (bold, italic, etc.)
-                if (child.marks && child.marks.length > 0) {
-                    child.marks.forEach(mark => {
-                        if (mark === 'strong') text = `<strong>${text}</strong>`;
-                        if (mark === 'em') text = `<em>${text}</em>`;
-                    });
-                }
+                let html = '';
                 
-                return text;
-            }).join('');
-            
-            // Handle line breaks properly
-            if (!text.trim()) return '';
-            
-            // Apply block styles
-            switch (style) {
-                case 'h2': return `<h2>${text}</h2>`;
-                case 'h3': return `<h3>${text}</h3>`;
-                case 'blockquote': return `<blockquote>${text}</blockquote>`;
-                default: return `<p>${text}</p>`;
-            }
-        }
-        return '';
-    }).filter(html => html.trim()).join('\n');
-}
-            
-            function extractPlainText(blocks) {
-                if (!blocks || !Array.isArray(blocks)) return '';
-                
-                return blocks
-                    .filter(block => block._type === 'block')
-                    .map(block => {
-                        if (block.children && Array.isArray(block.children)) {
-                            return block.children
-                                .filter(child => child._type === 'span')
-                                .map(child => child.text || '')
-                                .join('');
+                blocks.forEach(block => {
+                    if (block._type === 'block' && block.children) {
+                        const style = block.style || 'normal';
+                        
+                        // Extract text from all children with proper formatting
+                        const text = block.children
+                            .map(child => {
+                                if (child._type === 'span') {
+                                    let content = child.text || '';
+                                    
+                                    // Apply all formatting marks
+                                    if (child.marks && child.marks.length > 0) {
+                                        child.marks.forEach(mark => {
+                                            switch (mark) {
+                                                case 'strong':
+                                                    content = `<strong>${content}</strong>`;
+                                                    break;
+                                                case 'em':
+                                                    content = `<em>${content}</em>`;
+                                                    break;
+                                                case 'underline':
+                                                    content = `<u>${content}</u>`;
+                                                    break;
+                                                case 'strike-through':
+                                                    content = `<s>${content}</s>`;
+                                                    break;
+                                                case 'code':
+                                                    content = `<code>${content}</code>`;
+                                                    break;
+                                            }
+                                        });
+                                    }
+                                    
+                                    return content;
+                                }
+                                return '';
+                            })
+                            .join('');
+                        
+                        // Only add non-empty content
+                        if (text.trim()) {
+                            switch (style) {
+                                case 'h1':
+                                    html += `<h1>${text}</h1>`;
+                                    break;
+                                case 'h2':
+                                    html += `<h2>${text}</h2>`;
+                                    break;
+                                case 'h3':
+                                    html += `<h3>${text}</h3>`;
+                                    break;
+                                case 'h4':
+                                    html += `<h4>${text}</h4>`;
+                                    break;
+                                case 'h5':
+                                    html += `<h5>${text}</h5>`;
+                                    break;
+                                case 'h6':
+                                    html += `<h6>${text}</h6>`;
+                                    break;
+                                case 'blockquote':
+                                    html += `<blockquote>${text}</blockquote>`;
+                                    break;
+                                default:
+                                    html += `<p>${text}</p>`;
+                                    break;
+                            }
                         }
-                        return '';
-                    })
-                    .join(' ')
-                    .substring(0, 200) + '...';
+                    }
+                });
+                
+                return html || '<p>No content available.</p>';
             }
             
             async function loadPost(slug) {
@@ -265,7 +343,6 @@
                 
                 // Convert body to HTML
                 const bodyHtml = blocksToHtml(post.body);
-                const excerpt = post.excerpt || extractPlainText(post.body);
                 
                 container.innerHTML = `
                     <article>
@@ -274,7 +351,7 @@
                             <div class="post-meta">
                                 ${post.publishedAt ? formatDate(post.publishedAt) : 'No date'}
                             </div>
-                            ${excerpt ? `<div class="post-excerpt">${excerpt}</div>` : ''}
+                            ${post.excerpt ? `<div class="post-excerpt">${post.excerpt}</div>` : ''}
                         </header>
                         
                         <div class="post-content">
