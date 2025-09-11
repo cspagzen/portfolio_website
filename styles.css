@@ -499,7 +499,6 @@ nav {
     margin-top: 0.2rem;
 }
 
-/* Thought Leadership Section */
 .thought-leadership-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
