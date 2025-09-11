@@ -238,7 +238,7 @@
               </p>
               <p>${post.excerpt || extractText(post.body) || 'No excerpt available.'}</p>
               <p style="margin-top:.6rem;">
-                <a href="/blog/${post.slug?.current || 'post'}">Read the full article</a>
+                <a href="blog-post.html?slug=${post.slug?.current || 'post'}">Read the full article</a>
               </p>
             </div>
           </article>

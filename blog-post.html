@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Blog Post - Chris Spagnuolo</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .post-container {
+            max-width: 800px;
+            margin: 120px auto 80px;
+            padding: 0 20px;
+        }
+        
+        .post-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .post-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #333;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        
+        .post-meta {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .post-excerpt {
+            font-size: 1.2rem;
+            color: #555;
+            font-style: italic;
+            line-height: 1.6;
+        }
+        
+        .post-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #333;
+        }
+        
+        .post-content h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #667eea;
+            margin: 2.5rem 0 1rem;
+        }
+        
+        .post-content h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #333;
+            margin: 2rem 0 0.8rem;
+        }
+        
+        .post-content p {
+            margin-bottom: 1.5rem;
+        }
+        
+        .post-content ul, .post-content ol {
+            margin: 1.5rem 0;
+            padding-left: 2rem;
+        }
+        
+        .post-content li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .post-content blockquote {
+            border-left: 4px solid #667eea;
+            padding: 1rem 1.5rem;
+            margin: 2rem 0;
+            background: #f8f9ff;
+            font-style: italic;
+            color: #555;
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            transition: color 0.3s ease;
+        }
+        
+        .back-link:hover {
+            color: #5a6fd8;
+        }
+        
+        .loading, .error {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+        
+        .error {
+            color: #d63384;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html" class="logo">Chris Spagnuolo</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="resume.html">Experience</a></li>
+                <li><a href="testimonials.html">Testimonials</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="post-container">
+        <a href="blog.html" class="back-link">
+            ← Back to Blog
+        </a>
+        
+        <div id="post-content">
+            <div class="loading">Loading post...</div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Chris Spagnuolo. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const PROJECT_ID = 'bcqvqm54';
+            const DATASET = 'production';
+            
+            // Get slug from URL parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const slug = urlParams.get('slug');
+            
+            if (!slug) {
+                showError('No post specified. Please return to the blog page.');
+                return;
+            }
+            
+            loadPost(slug);
+            
+            async function fetchFromSanity(query) {
+                const encodedQuery = encodeURIComponent(query);
+                const url = `https://${PROJECT_ID}.api.sanity.io/v2024-01-01/data/query/${DATASET}?query=${encodedQuery}`;
+                
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`Sanity API error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                return data.result;
+            }
+            
+            function formatDate(dateString) {
+                return new Date(dateString).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+            }
+            
+            // Convert Sanity rich text blocks to HTML
+            function blocksToHtml(blocks) {
+                if (!blocks || !Array.isArray(blocks)) return '';
+                
+                return blocks.map(block => {
+                    if (block._type === 'block') {
+                        const style = block.style || 'normal';
+                        const children = block.children || [];
+                        
+                        const text = children.map(child => {
+                            let text = child.text || '';
+                            
+                            // Apply marks (bold, italic, etc.)
+                            if (child.marks && child.marks.length > 0) {
+                                child.marks.forEach(mark => {
+                                    if (mark === 'strong') text = `<strong>${text}</strong>`;
+                                    if (mark === 'em') text = `<em>${text}</em>`;
+                                });
+                            }
+                            
+                            return text;
+                        }).join('');
+                        
+                        // Apply block styles
+                        switch (style) {
+                            case 'h2': return `<h2>${text}</h2>`;
+                            case 'h3': return `<h3>${text}</h3>`;
+                            case 'blockquote': return `<blockquote>${text}</blockquote>`;
+                            default: return `<p>${text}</p>`;
+                        }
+                    }
+                    return '';
+                }).join('');
+            }
+            
+            function extractPlainText(blocks) {
+                if (!blocks || !Array.isArray(blocks)) return '';
+                
+                return blocks
+                    .filter(block => block._type === 'block')
+                    .map(block => {
+                        if (block.children && Array.isArray(block.children)) {
+                            return block.children
+                                .filter(child => child._type === 'span')
+                                .map(child => child.text || '')
+                                .join('');
+                        }
+                        return '';
+                    })
+                    .join(' ')
+                    .substring(0, 200) + '...';
+            }
+            
+            async function loadPost(slug) {
+                try {
+                    const query = `*[_type == "post" && slug.current == "${slug}"][0] {
+                        title,
+                        slug,
+                        excerpt,
+                        publishedAt,
+                        body
+                    }`;
+                    
+                    const post = await fetchFromSanity(query);
+                    
+                    if (!post) {
+                        showError('Post not found. Please check the URL or return to the blog page.');
+                        return;
+                    }
+                    
+                    renderPost(post);
+                    
+                } catch (error) {
+                    console.error('Error loading post:', error);
+                    showError('Failed to load post. Please try again later.');
+                }
+            }
+            
+            function renderPost(post) {
+                const container = document.getElementById('post-content');
+                const pageTitle = document.getElementById('page-title');
+                
+                // Update page title
+                pageTitle.textContent = `${post.title} - Chris Spagnuolo`;
+                
+                // Convert body to HTML
+                const bodyHtml = blocksToHtml(post.body);
+                const excerpt = post.excerpt || extractPlainText(post.body);
+                
+                container.innerHTML = `
+                    <article>
+                        <header class="post-header">
+                            <h1 class="post-title">${post.title}</h1>
+                            <div class="post-meta">
+                                ${post.publishedAt ? formatDate(post.publishedAt) : 'No date'}
+                            </div>
+                            ${excerpt ? `<div class="post-excerpt">${excerpt}</div>` : ''}
+                        </header>
+                        
+                        <div class="post-content">
+                            ${bodyHtml}
+                        </div>
+                    </article>
+                `;
+            }
+            
+            function showError(message) {
+                const container = document.getElementById('post-content');
+                container.innerHTML = `<div class="error">${message}</div>`;
+            }
+        });
+    </script>
+</body>
+</html>
