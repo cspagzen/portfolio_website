@@ -418,7 +418,24 @@
                 const container = document.getElementById('post-content');
                 const pageTitle = document.getElementById('page-title');
                 
+                // Update page title
                 pageTitle.textContent = `${post.title} - Chris Spagnuolo`;
+                
+                // Update Open Graph meta tags
+                const currentUrl = window.location.href;
+                document.querySelector('meta[property="og:url"]').setAttribute('content', currentUrl);
+                document.querySelector('meta[property="og:title"]').setAttribute('content', post.title);
+                document.querySelector('meta[name="twitter:title"]').setAttribute('content', post.title);
+                
+                if (post.excerpt) {
+                    document.querySelector('meta[property="og:description"]').setAttribute('content', post.excerpt);
+                    document.querySelector('meta[name="twitter:description"]').setAttribute('content', post.excerpt);
+                } else {
+                    // Extract first paragraph from body as fallback
+                    const firstParagraph = extractFirstParagraph(post.body);
+                    document.querySelector('meta[property="og:description"]').setAttribute('content', firstParagraph);
+                    document.querySelector('meta[name="twitter:description"]').setAttribute('content', firstParagraph);
+                }
                 
                 const bodyHtml = blocksToHtml(post.body);
                 
@@ -435,6 +452,25 @@
                 content += bodyHtml;
                 
                 container.innerHTML = content;
+            }
+            
+            function extractFirstParagraph(blocks) {
+                if (!blocks || !Array.isArray(blocks)) return 'Read the latest insights on product leadership and strategy.';
+                
+                for (const block of blocks) {
+                    if (block._type === 'block' && block.children && block.style === 'normal') {
+                        const text = block.children
+                            .filter(child => child._type === 'span' && child.text)
+                            .map(child => child.text)
+                            .join('');
+                        
+                        if (text.trim().length > 50) {
+                            return text.trim().substring(0, 160) + '...';
+                        }
+                    }
+                }
+                
+                return 'Read the latest insights on product leadership and strategy.';
             }
             
             function showError(message) {
