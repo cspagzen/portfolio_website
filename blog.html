@@ -5,19 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chris Spagnuolo - Blog</title>
     <link rel="stylesheet" href="styles.css">
-    <!-- Add Lucide CDN -->
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 </head>
 <body>
     <header>
         <nav>
-        <a href="index.html" class="logo">Chris Spagnuolo</a>
-        <div class="nav-toggle">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-        <ul class="nav-links">
+            <a href="index.html" class="logo">Chris Spagnuolo</a>
+            <div class="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="resume.html">Experience</a></li>
                 <li><a href="testimonials.html">Testimonials</a></li>
@@ -27,72 +27,36 @@
         </nav>
     </header>
 
+    <!-- Hero (unchanged) -->
     <section class="hero">
         <div class="container">
             <div class="hero-content">
                 <h1>Insights & Perspectives</h1>
                 <div class="subtitle">Thoughts on product strategy, leadership, and building exceptional teams</div>
                 <div class="description">
-                    Exploring the intersection of product vision, strategic execution, and human-centered leadership. 
+                    Exploring the intersection of product vision, strategic execution, and human-centered leadership.
                     From AI implementation to organizational design, sharing practical insights from 20+ years of product leadership.
                 </div>
             </div>
         </div>
+        <div class="scroll-indicator">▼</div>
     </section>
 
     <main class="main-content">
+        <!-- NEW: Latest Articles section that replaces Coming Soon + Planned Content -->
         <section class="section">
             <div class="container">
-                <div style="text-align: center; padding: 4rem 0;">
-                    <div style="font-size: 4rem; margin-bottom: 2rem; opacity: 0.3; display: flex; justify-content: center;">
-                        <i data-lucide="edit-3" style="width: 4rem; height: 4rem;"></i>
-                    </div>
-                    <h2 style="font-size: 2.5rem; color: #667eea; margin-bottom: 1rem;">Coming Soon</h2>
-                    <p style="font-size: 1.2rem; color: #666; max-width: 600px; margin: 0 auto 2rem;">
-                        I'm currently developing content that explores the nuances of product leadership, 
-                        team building, and strategic decision-making. This space will feature insights from 
-                        my experience scaling organizations and driving product innovation.
-                    </p>
-                    
-                    <div style="background: #f8f9fa; padding: 2rem; border-radius: 15px; max-width: 800px; margin: 0 auto; text-align: left;">
-                        <h3 style="color: #667eea; margin-bottom: 1rem;">Planned Content Areas:</h3>
-                        <ul style="list-style: none; padding: 0;">
-                            <li style="padding: 0.5rem 0; border-bottom: 1px solid #e9ecef; display: flex; align-items: center; gap: 0.8rem;">
-                                <i data-lucide="target" style="width: 1.2rem; height: 1.2rem; color: #667eea; flex-shrink: 0;"></i>
-                                <div><strong>Product Strategy</strong> - From vision to execution in complex markets</div>
-                            </li>
-                            <li style="padding: 0.5rem 0; border-bottom: 1px solid #e9ecef; display: flex; align-items: center; gap: 0.8rem;">
-                                <i data-lucide="cpu" style="width: 1.2rem; height: 1.2rem; color: #667eea; flex-shrink: 0;"></i>
-                                <div><strong>AI/ML in Product</strong> - Practical implementation and user experience considerations</div>
-                            </li>
-                            <li style="padding: 0.5rem 0; border-bottom: 1px solid #e9ecef; display: flex; align-items: center; gap: 0.8rem;">
-                                <i data-lucide="users" style="width: 1.2rem; height: 1.2rem; color: #667eea; flex-shrink: 0;"></i>
-                                <div><strong>Team Leadership</strong> - Building high-performing product organizations</div>
-                            </li>
-                            <li style="padding: 0.5rem 0; border-bottom: 1px solid #e9ecef; display: flex; align-items: center; gap: 0.8rem;">
-                                <i data-lucide="trending-up" style="width: 1.2rem; height: 1.2rem; color: #667eea; flex-shrink: 0;"></i>
-                                <div><strong>Growth Strategy</strong> - Go-to-market execution and scaling methodologies</div>
-                            </li>
-                            <li style="padding: 0.5rem 0; border-bottom: 1px solid #e9ecef; display: flex; align-items: center; gap: 0.8rem;">
-                                <i data-lucide="network" style="width: 1.2rem; height: 1.2rem; color: #667eea; flex-shrink: 0;"></i>
-                                <div><strong>Organizational Design</strong> - Structuring teams for innovation and delivery</div>
-                            </li>
-                            <li style="padding: 0.5rem 0; display: flex; align-items: center; gap: 0.8rem;">
-                                <i data-lucide="palette" style="width: 1.2rem; height: 1.2rem; color: #667eea; flex-shrink: 0;"></i>
-                                <div><strong>Design Thinking</strong> - User-centered approaches to complex business problems</div>
-                            </li>
-                        </ul>
-                    </div>
+                <h2 class="section-title">Latest Articles</h2>
+                <div class="section-subtitle">Fresh writing from the blog</div>
 
-                    <div style="margin-top: 3rem;">
-                        <p style="color: #888; margin-bottom: 1rem;">Want to be notified when new content is published?</p>
-                        <a href="https://linkedin.com/in/chrisspagnuolo" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 12px 24px; border-radius: 25px; text-decoration: none; font-weight: 600;">Follow on LinkedIn</a>
-                    </div>
+                <!-- Grid of post cards populated from /posts/posts.json -->
+                <div id="latest-posts" class="thought-leadership-grid">
+                    <!-- Cards will be injected by JS -->
                 </div>
             </div>
         </section>
 
-        <!-- Featured Past Content -->
+        <!-- Featured Past Content (kept exactly as before) -->
         <section class="section" style="background: #f8f9fa;">
             <div class="container">
                 <h2 class="section-title">Previous Thought Leadership</h2>
@@ -157,7 +121,8 @@
         </section>
     </main>
 
-    <section class="contact-section section">
+    <!-- Keep Contact section -->
+    <section class="contact-section section" id="contact">
         <div class="container">
             <h2 class="section-title">Let's Connect</h2>
             <p style="font-size: 1.2rem; opacity: 0.9; max-width: 600px; margin: 0 auto;">
@@ -177,14 +142,46 @@
         </div>
     </footer>
 
+    <!-- Your existing scripts -->
     <script src="script.js"></script>
     <script defer src="/_vercel/insights/script.js"></script>
-    
+
     <!-- Initialize Lucide icons -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            lucide.createIcons();
+            if (window.lucide) lucide.createIcons();
         });
+    </script>
+
+    <!-- Load posts from /posts/posts.json and render cards -->
+    <script>
+      async function renderLatestPosts() {
+        const container = document.getElementById('latest-posts');
+        try {
+          const res = await fetch('./posts/posts.json', { cache: 'no-store' });
+          const posts = await res.json();
+
+          // Sort newest first just in case
+          const sorted = posts.slice().reverse();
+
+          container.innerHTML = sorted.map(p => `
+            <article class="content-card">
+              <div class="content-type">Article</div>
+              <div class="content-body">
+                <h3><a href="./posts/${p.filename}">${p.title}</a></h3>
+                <p class="muted" style="color:#666; margin:.25rem 0 0.6rem;">${p.date}</p>
+                <p>${p.excerpt}</p>
+                <p style="margin-top:.6rem;">
+                  <a href="./posts/${p.filename}">Read the full article</a>
+                </p>
+              </div>
+            </article>
+          `).join('');
+        } catch (e) {
+          container.innerHTML = '<p>Unable to load posts right now.</p>';
+        }
+      }
+      renderLatestPosts();
     </script>
 </body>
 </html>
