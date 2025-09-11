@@ -136,14 +136,24 @@
     </footer>
 
     <script src="script.js"></script>
-    <script defer src="/_vercel/insights/script.js"></script>
+    <script defer src="//_vercel/insights/script.js"></script>
     <script>
       document.addEventListener('DOMContentLoaded', function() { if (window.lucide) lucide.createIcons(); });
+
+      const PAGE_SIZE = 6;
 
       function getPageParam() {
         const url = new URL(window.location.href);
         const p = parseInt(url.searchParams.get('page') || '1', 10);
         return isNaN(p) || p < 1 ? 1 : p;
+      }
+
+      function parseDate(d) {
+        // Accept "September 11, 2025" or ISO "2025-09-11"
+        const iso = /^\d{4}-\d{2}-\d{2}$/;
+        if (iso.test(d)) return new Date(d + 'T00:00:00Z').getTime();
+        const t = Date.parse(d);
+        return isNaN(t) ? 0 : t;
       }
 
       function showError(err) {
@@ -154,7 +164,6 @@
       }
 
       async function renderPosts() {
-        const PAGE_SIZE = 6;
         const container = document.getElementById('latest-posts');
         const pager = document.getElementById('pager');
 
@@ -163,7 +172,8 @@
           if (!res.ok) throw new Error('Failed to load posts.json: ' + res.status + ' ' + res.statusText);
           const items = await res.json();
 
-          const posts = items.slice().reverse();
+          // Use the order from posts.json (already sorted newest to oldest)
+const posts = items.slice();
 
           const page = getPageParam();
           const total = posts.length;
