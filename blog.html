@@ -5,8 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chris Spagnuolo - Blog</title>
     <link rel="stylesheet" href="styles.css">
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+      .pagination { display:flex; gap:.5rem; align-items:center; justify-content:center; margin-top:1.5rem; }
+      .page-link { padding:.5rem .8rem; border:1px solid #e1e5ee; border-radius:8px; text-decoration:none; color:#333; }
+      .page-link.active { background:#667eea; color:#fff; border-color:#667eea; }
+      .page-link.disabled { opacity:.4; pointer-events:none; }
+    </style>
 </head>
 <body>
     <header>
@@ -21,44 +26,40 @@
                 <li><a href="index.html">Home</a></li>
                 <li><a href="resume.html">Experience</a></li>
                 <li><a href="testimonials.html">Testimonials</a></li>
-                <li><a href="blog.html">Blog</a></li>
+                <li><a href="blog.html" class="active">Blog</a></li>
                 <li><a href="index.html#contact">Contact</a></li>
             </ul>
         </nav>
     </header>
 
-    <!-- Hero (unchanged) -->
     <section class="hero">
         <div class="container">
             <div class="hero-content">
                 <h1>Insights & Perspectives</h1>
-                <div class="subtitle">Real talk about building products, leading teams, and getting companies unstuck. Twenty years of wins, fails, and everything in between.</div>
-                
+                <div class="subtitle">Thoughts on product strategy, leadership, and building exceptional teams</div>
+                <div class="description">
+                    Exploring the intersection of product vision, strategic execution, and human-centered leadership.
+                    From AI implementation to organizational design, sharing practical insights from 20+ years of product leadership.
+                </div>
             </div>
         </div>
         <div class="scroll-indicator">▼</div>
     </section>
 
     <main class="main-content">
-        <!-- NEW: Latest Articles section that replaces Coming Soon + Planned Content -->
         <section class="section">
             <div class="container">
                 <h2 class="section-title">Latest Articles</h2>
                 <div class="section-subtitle">Fresh writing from the blog</div>
-
-                <!-- Grid of post cards populated from /posts/posts.json -->
-                <div id="latest-posts" class="thought-leadership-grid">
-                    <!-- Cards will be injected by JS -->
-                </div>
+                <div id="latest-posts" class="thought-leadership-grid"></div>
+                <div id="pager" class="pagination"></div>
             </div>
         </section>
 
-        <!-- Featured Past Content (kept exactly as before) -->
         <section class="section" style="background: #f8f9fa;">
             <div class="container">
                 <h2 class="section-title">Previous Thought Leadership</h2>
-                <div class="section-subtitle">Explore some of my older insights and perspectives</div>
-                
+                <div class="section-subtitle">Explore past interviews, talks, and articles</div>
                 <div class="thought-leadership-grid">
                     <div class="content-card">
                         <div class="content-type">Podcast</div>
@@ -68,7 +69,6 @@
                             <p><a href="https://productmasterynow.com/blog/tei-130-avoiding-product-management-dogma-with-chris-spagnuolo/" target="_blank">Listen on Product Mastery Now</a></p>
                         </div>
                     </div>
-                    
                     <div class="content-card">
                         <div class="content-type">Video</div>
                         <div class="content-body">
@@ -77,7 +77,6 @@
                             <p><a href="https://www.youtube.com/watch?v=iNZN9DGgXYU" target="_blank">Watch on YouTube</a></p>
                         </div>
                     </div>
-                    
                     <div class="content-card">
                         <div class="content-type">Article</div>
                         <div class="content-body">
@@ -86,7 +85,6 @@
                             <p><a href="https://www.liminalarc.co/2014/11/haruki-murakami-teaches-sustainable-pace/" target="_blank">Read on Liminal Arc</a></p>
                         </div>
                     </div>
-                    
                     <div class="content-card">
                         <div class="content-type">Podcast</div>
                         <div class="content-body">
@@ -95,7 +93,6 @@
                             <p><a href="https://liminalarcgroup.podbean.com/e/it2-innovation-in-the-enterprise-chris-spagnuolo/" target="_blank">Listen on Liminal Arc</a></p>
                         </div>
                     </div>
-                    
                     <div class="content-card">
                         <div class="content-type">Video</div>
                         <div class="content-body">
@@ -104,7 +101,6 @@
                             <p><a href="https://www.youtube.com/watch?v=5_Ip-jA4hhg" target="_blank">Watch on YouTube</a></p>
                         </div>
                     </div>
-                    
                     <div class="content-card">
                         <div class="content-type">Article</div>
                         <div class="content-body">
@@ -118,12 +114,11 @@
         </section>
     </main>
 
-    <!-- Keep Contact section -->
     <section class="contact-section section" id="contact">
         <div class="container">
             <h2 class="section-title">Let's Connect</h2>
             <p style="font-size: 1.2rem; opacity: 0.9; max-width: 600px; margin: 0 auto;">
-                Interested in discussing product strategy, leadership challenges, or collaboration opportunities? 
+                Interested in discussing product strategy, leadership challenges, or collaboration opportunities?
                 I'd love to hear from you.
             </p>
             <div class="cta-buttons" style="margin-top: 2rem;">
@@ -139,46 +134,73 @@
         </div>
     </footer>
 
-    <!-- Your existing scripts -->
     <script src="script.js"></script>
     <script defer src="/_vercel/insights/script.js"></script>
-
-    <!-- Initialize Lucide icons -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            if (window.lucide) lucide.createIcons();
-        });
-    </script>
+      document.addEventListener('DOMContentLoaded', function() { if (window.lucide) lucide.createIcons(); });
 
-    <!-- Load posts from /posts/posts.json and render cards -->
-    <script>
-      async function renderLatestPosts() {
+      function getPageParam() {
+        const url = new URL(window.location.href);
+        const p = parseInt(url.searchParams.get('page') || '1', 10);
+        return isNaN(p) || p < 1 ? 1 : p;
+      }
+
+      async function renderPosts() {
+        const PAGE_SIZE = 6;
         const container = document.getElementById('latest-posts');
+        const pager = document.getElementById('pager');
+
         try {
-          const res = await fetch('./posts/posts.json', { cache: 'no-store' });
-          const posts = await res.json();
+          const res = await fetch('./posts/posts.json', {{ cache: 'no-store' }});
+          const items = await res.json();
 
-          // Sort newest first just in case
-          const sorted = posts.slice().reverse();
+          // newest first by date order (fallback to file order)
+          const posts = items.slice().reverse();
 
-          container.innerHTML = sorted.map(p => `
+          const page = getPageParam();
+          const total = posts.length;
+          const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+          const start = (page - 1) * PAGE_SIZE;
+          const slice = posts.slice(start, start + PAGE_SIZE);
+
+          container.innerHTML = slice.map(p => `
             <article class="content-card">
               <div class="content-type">Article</div>
               <div class="content-body">
-                <h3><a href="./posts/${p.filename}">${p.title}</a></h3>
-                <p class="muted" style="color:#666; margin:.25rem 0 0.6rem;">${p.date}</p>
-                <p>${p.excerpt}</p>
+                <h3><a href="./posts/${{p.filename}}">${{p.title}}</a></h3>
+                <p class="muted" style="color:#666; margin:.25rem 0 0.6rem;">${{p.date}}</p>
+                <p>${{p.excerpt}}</p>
                 <p style="margin-top:.6rem;">
-                  <a href="./posts/${p.filename}">Read the full article</a>
+                  <a href="./posts/${{p.filename}}">Read the full article</a>
                 </p>
               </div>
             </article>
           `).join('');
-        } catch (e) {
+
+          // pager
+          function link(pageNum, label, disabled=false, active=false) {
+            const cls = ['page-link'];
+            if (disabled) cls.push('disabled');
+            if (active) cls.push('active');
+            const q = new URLSearchParams(window.location.search);
+            q.set('page', pageNum);
+            const href = `?${{q.toString()}}`;
+            return `<a class="${{cls.join(' ')}}" href="${{href}}">${{label}}</a>`;
+          }
+
+          let html = '';
+          html += link(Math.max(1, page-1), 'Prev', page===1);
+          for (let i=1;i<=pages;i++) html += link(i, i, false, i===page);
+          html += link(Math.min(pages, page+1), 'Next', page===pages);
+          pager.innerHTML = html;
+
+        } catch(e) {
           container.innerHTML = '<p>Unable to load posts right now.</p>';
+          pager.innerHTML = '';
         }
       }
-      renderLatestPosts();
+
+      renderPosts();
     </script>
 </body>
 </html>
