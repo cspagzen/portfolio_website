@@ -6,7 +6,6 @@
     <title>Chris Spagnuolo - Blog</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@sanity/client@6.4.12/dist/sanity.min.js"></script>
     <style>
       .pagination { display:flex; gap:.5rem; align-items:center; justify-content:center; margin-top:1.5rem; }
       .page-link { padding:.5rem .8rem; border:1px solid #e1e5ee; border-radius:8px; text-decoration:none; color:#333; }
@@ -139,43 +138,12 @@
     <script src="script.js"></script>
     <script defer src="//_vercel/insights/script.js"></script>
     <script>
-      document.addEventListener('DOMContentLoaded', function() { if (window.lucide) lucide.createIcons(); });
-
-      const PAGE_SIZE = 6;
-
-      function getPageParam() {
-        const url = new URL(window.location.href);
-        const p = parseInt(url.searchParams.get('page') || '1', 10);
-        return isNaN(p) || p < 1 ? 1 : p;
-      }
-
-      function parseDate(d) {
-        // Accept "September 11, 2025" or ISO "2025-09-11"
-        const iso = /^\d{4}-\d{2}-\d{2}$/;
-        if (iso.test(d)) return new Date(d + 'T00:00:00Z').getTime();
-        const t = Date.parse(d);
-        return isNaN(t) ? 0 : t;
-      }
-
-      function showError(err) {
-        const el = document.getElementById('error-log');
-        el.style.display = 'block';
-        el.textContent = String(err);
-        console.error(err);
-      }
-
       document.addEventListener('DOMContentLoaded', function() { 
   if (window.lucide) lucide.createIcons(); 
 
-  // Initialize Sanity client with your project details
-  const client = sanityClient({
-    projectId: 'bcqvqm54',
-    dataset: 'production',
-    useCdn: true,
-    apiVersion: '2024-01-01'
-  });
-
   const PAGE_SIZE = 6;
+  const PROJECT_ID = 'bcqvqm54';
+  const DATASET = 'production';
 
   function getPageParam() {
     const url = new URL(window.location.href);
@@ -200,6 +168,38 @@
     console.error(err);
   }
 
+  // Function to convert Sanity rich text to plain text
+  function extractText(blocks) {
+    if (!blocks || !Array.isArray(blocks)) return '';
+    
+    return blocks
+      .filter(block => block._type === 'block')
+      .map(block => {
+        if (block.children && Array.isArray(block.children)) {
+          return block.children
+            .filter(child => child._type === 'span')
+            .map(child => child.text || '')
+            .join('');
+        }
+        return '';
+      })
+      .join(' ')
+      .substring(0, 150) + '...';
+  }
+
+  async function fetchFromSanity(query) {
+    const encodedQuery = encodeURIComponent(query);
+    const url = `https://${PROJECT_ID}.api.sanity.io/v2024-01-01/data/query/${DATASET}?query=${encodedQuery}`;
+    
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Sanity API error: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    return data.result;
+  }
+
   async function renderPosts() {
     const container = document.getElementById('latest-posts');
     const pager = document.getElementById('pager');
@@ -207,44 +207,49 @@
     try {
       const page = getPageParam();
       const start = (page - 1) * PAGE_SIZE;
+      const end = start + PAGE_SIZE;
 
-      // Fetch posts from Sanity
-      const query = `
-        *[_type == "post" && defined(publishedAt)] | order(publishedAt desc) [${start}...${start + PAGE_SIZE}] {
-          title,
-          slug,
-          excerpt,
-          publishedAt,
-          body,
-          "plainTextExcerpt": pt::text(body)[0...150]
-        }
-      `;
+      // Fetch posts from Sanity using direct API
+      const postsQuery = `*[_type == "post" && defined(publishedAt)] | order(publishedAt desc) [${start}...${end}] {
+        title,
+        slug,
+        excerpt,
+        publishedAt,
+        body
+      }`;
 
       const totalQuery = `count(*[_type == "post" && defined(publishedAt)])`;
       
       const [posts, total] = await Promise.all([
-        client.fetch(query),
-        client.fetch(totalQuery)
+        fetchFromSanity(postsQuery),
+        fetchFromSanity(totalQuery)
       ]);
+
+      console.log('Fetched posts:', posts);
+      console.log('Total posts:', total);
 
       const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
       // Render blog post cards
-      container.innerHTML = posts.map(post => `
-        <article class="content-card">
-          <div class="content-type">Article</div>
-          <div class="content-body">
-            <h3><a href="/blog/${post.slug.current}">${post.title}</a></h3>
-            <p class="muted" style="color:#666; margin:.25rem 0 0.6rem; font-size: 0.9rem;">
-              ${formatDate(post.publishedAt)}
-            </p>
-            <p>${post.excerpt || post.plainTextExcerpt || ''}</p>
-            <p style="margin-top:.6rem;">
-              <a href="/blog/${post.slug.current}">Read the full article</a>
-            </p>
-          </div>
-        </article>
-      `).join('');
+      if (posts && posts.length > 0) {
+        container.innerHTML = posts.map(post => `
+          <article class="content-card">
+            <div class="content-type">Article</div>
+            <div class="content-body">
+              <h3><a href="/blog/${post.slug?.current || 'post'}">${post.title || 'Untitled'}</a></h3>
+              <p class="muted" style="color:#666; margin:.25rem 0 0.6rem; font-size: 0.9rem;">
+                ${post.publishedAt ? formatDate(post.publishedAt) : 'No date'}
+              </p>
+              <p>${post.excerpt || extractText(post.body) || 'No excerpt available.'}</p>
+              <p style="margin-top:.6rem;">
+                <a href="/blog/${post.slug?.current || 'post'}">Read the full article</a>
+              </p>
+            </div>
+          </article>
+        `).join('');
+      } else {
+        container.innerHTML = '<p>No posts found. Create some posts in your Sanity Studio!</p>';
+      }
 
       // Generate pagination controls
       function createPageLink(pageNum, label, disabled = false, active = false) {
@@ -291,7 +296,7 @@
 
     } catch(e) {
       showError('Error loading posts: ' + e.message);
-      container.innerHTML = '<p>Unable to load posts right now.</p>';
+      container.innerHTML = '<p>Unable to load posts. Make sure your Sanity Studio is running and you have published posts.</p>';
       pager.innerHTML = '';
     }
   }
