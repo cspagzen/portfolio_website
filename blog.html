@@ -53,6 +53,7 @@
                 <div class="section-subtitle">Fresh writing from the blog</div>
                 <div id="latest-posts" class="thought-leadership-grid"></div>
                 <div id="pager" class="pagination"></div>
+                <pre id="error-log" style="display:none; background:#fff3f3; color:#b00020; padding:8px; border-radius:8px; margin-top:12px;"></pre>
             </div>
         </section>
 
@@ -145,16 +146,23 @@
         return isNaN(p) || p < 1 ? 1 : p;
       }
 
+      function showError(err) {
+        const el = document.getElementById('error-log');
+        el.style.display = 'block';
+        el.textContent = String(err);
+        console.error(err);
+      }
+
       async function renderPosts() {
         const PAGE_SIZE = 6;
         const container = document.getElementById('latest-posts');
         const pager = document.getElementById('pager');
 
         try {
-          const res = await fetch('./posts/posts.json', {{ cache: 'no-store' }});
+          const res = await fetch('./posts/posts.json', { cache: 'no-store' });
+          if (!res.ok) throw new Error('Failed to load posts.json: ' + res.status + ' ' + res.statusText);
           const items = await res.json();
 
-          // newest first by date order (fallback to file order)
           const posts = items.slice().reverse();
 
           const page = getPageParam();
@@ -167,25 +175,24 @@
             <article class="content-card">
               <div class="content-type">Article</div>
               <div class="content-body">
-                <h3><a href="./posts/${{p.filename}}">${{p.title}}</a></h3>
-                <p class="muted" style="color:#666; margin:.25rem 0 0.6rem;">${{p.date}}</p>
-                <p>${{p.excerpt}}</p>
+                <h3><a href="./posts/${p.filename}">${p.title}</a></h3>
+                <p class="muted" style="color:#666; margin:.25rem 0 0.6rem;">${p.date}</p>
+                <p>${p.excerpt}</p>
                 <p style="margin-top:.6rem;">
-                  <a href="./posts/${{p.filename}}">Read the full article</a>
+                  <a href="./posts/${p.filename}">Read the full article</a>
                 </p>
               </div>
             </article>
           `).join('');
 
-          // pager
           function link(pageNum, label, disabled=false, active=false) {
             const cls = ['page-link'];
             if (disabled) cls.push('disabled');
             if (active) cls.push('active');
             const q = new URLSearchParams(window.location.search);
             q.set('page', pageNum);
-            const href = `?${{q.toString()}}`;
-            return `<a class="${{cls.join(' ')}}" href="${{href}}">${{label}}</a>`;
+            const href = `?${q.toString()}`;
+            return `<a class="${cls.join(' ')}" href="${href}">${label}</a>`;
           }
 
           let html = '';
@@ -195,6 +202,7 @@
           pager.innerHTML = html;
 
         } catch(e) {
+          showError(e);
           container.innerHTML = '<p>Unable to load posts right now.</p>';
           pager.innerHTML = '';
         }
