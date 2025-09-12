@@ -665,7 +665,8 @@ nav {
     transition: 0.3s;
 }
 
-/* Responsive Design */
+/* Replace the existing @media (max-width: 768px) section in styles.css with this: */
+
 @media (max-width: 768px) {
     .hero h1 {
         font-size: 2.5rem;
@@ -673,10 +674,16 @@ nav {
     
     .hero .subtitle {
         font-size: 1.2rem;
+        padding: 0 15px;
     }
     
     .hero .tagline {
         font-size: 1.1rem;
+        padding: 0 15px;
+    }
+    
+    .hero .description {
+        padding: 0 15px;
     }
     
     .nav-toggle {
@@ -684,24 +691,90 @@ nav {
     }
     
     .nav-links {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
+        position: fixed;
+        top: 70px;
+        right: -100%;
         width: 100%;
+        height: calc(100vh - 70px);
         background: rgba(255, 255, 255, 0.98);
         backdrop-filter: blur(10px);
         flex-direction: column;
-        padding: 1rem 2rem;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        justify-content: flex-start;
+        align-items: center;
+        gap: 0;
+        padding-top: 2rem;
+        transition: right 0.3s ease;
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        z-index: 999;
     }
     
     .nav-links.nav-open {
-        display: flex;
+        right: 0;
     }
     
     .nav-links li {
-        margin: 0.5rem 0;
+        width: 100%;
+        text-align: center;
+        border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+    }
+    
+    .nav-links a {
+        display: block;
+        width: 100%;
+        padding: 1.5rem 2rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+    
+    .nav-links a:hover {
+        background: rgba(102, 126, 234, 0.1);
+    }
+    
+    /* Blog page specific mobile fixes */
+    .section {
+        padding: 50px 0;
+    }
+    
+    .section-title {
+        font-size: 2rem;
+        padding: 0 10px;
+    }
+    
+    .section-subtitle {
+        font-size: 1rem;
+        padding: 0 10px;
+        margin-bottom: 2rem;
+    }
+    
+    .thought-leadership-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        padding: 0 10px;
+    }
+    
+    .content-card {
+        margin-bottom: 1.5rem;
+    }
+    
+    .content-card .content-body {
+        padding: 1.2rem;
+    }
+    
+    .content-card h3 {
+        font-size: 1rem;
+        line-height: 1.3;
+        margin-bottom: 0.8rem;
+    }
+    
+    .content-card p {
+        font-size: 0.9rem;
+        line-height: 1.5;
+        margin-bottom: 0.8rem;
+    }
+    
+    .content-card .content-type {
+        font-size: 0.7rem;
+        padding: 0.4rem 0.8rem;
     }
     
     .metrics-grid {
@@ -711,6 +784,12 @@ nav {
     .contact-info {
         flex-direction: column;
         gap: 1.5rem;
+        text-align: center;
+    }
+    
+    .contact-item {
+        font-size: 1rem;
+        justify-content: center;
     }
     
     .experience-grid {
@@ -721,19 +800,37 @@ nav {
         grid-template-columns: 1fr;
     }
     
-    .thought-leadership-grid {
-        grid-template-columns: 1fr;
-    }
-    
     .cta-buttons {
         flex-direction: column;
         align-items: center;
+        gap: 1rem;
+    }
+    
+    .cta-button {
+        width: auto;
+        min-width: 200px;
+        text-align: center;
     }
     
     .company-name {
         flex-direction: column;
         align-items: flex-start;
         gap: 0.5rem;
+    }
+    
+    /* Pagination mobile fixes */
+    .pagination {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.3rem;
+        margin-top: 2rem;
+    }
+    
+    .page-link {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.85rem;
+        min-width: 35px;
+        text-align: center;
     }
     
     /* Fix overlapping sections on mobile */
@@ -761,138 +858,47 @@ nav {
     .metric-card:hover {
         transform: translateY(-5px) !important;
     }
+    
+    /* Hero scroll indicator */
+    .scroll-indicator {
+        font-size: 1.5rem;
+        bottom: 20px;
+    }
 }
 
-.logo {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #667eea;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.logo:hover {
-    color: #5a6fd8;
-}
-
-.badge-container {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-    margin-bottom: 0.5rem;
-}
-
-.industry-badge {
-    font-size: 0.7rem;
-    font-weight: 600;
-    background: linear-gradient(135deg, #20c997, #17a2b8);
-    color: white;
-    padding: 0.3rem 0.8rem;
-    border-radius: 15px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.stage-badge {
-    font-size: 0.7rem;
-    font-weight: 600;
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    color: white;
-    padding: 0.3rem 0.8rem;
-    border-radius: 15px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.strategy-badge {
-    font-size: 0.7rem;
-    font-weight: 600;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-    padding: 0.3rem 0.8rem;
-    border-radius: 15px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-/* Enhanced testimonial cards for homepage */
-.testimonials-section .testimonial-card {
-    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-    border-left: 6px solid transparent;
-    border-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%) 1;
-    position: relative;
-    overflow: hidden;
-}
-
-.testimonials-section .testimonial-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 100px;
-    height: 100px;
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-    border-radius: 50%;
-    transform: translate(50%, -50%);
-}
-
-.testimonials-section .testimonial-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
-    border-left-color: #764ba2;
-}
-
-.testimonials-section .testimonial-quote {
-    position: relative;
-    z-index: 2;
-}
-
-.testimonials-section .author-name {
-    color: #667eea;
-    font-weight: 700;
-}
-
-.testimonials-section .author-title {
-    color: #764ba2;
-    font-weight: 600;
-}
-
-.testimonials-section .highlight {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-weight: 600;
-    position: relative;
-}
-
-.testimonials-section .highlight::before {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    opacity: 0.3;
-    border-radius: 1px;
-}
-
-/* Ensure CTA buttons stay above parallax effects */
-.cta-buttons {
-    position: relative;
-    z-index: 100;
-}
-
-.cta-button {
-    position: relative;
-    z-index: 101;
-}
-
-/* Reduce parallax on smaller screens */
-@media (max-width: 768px) {
-    .hero {
-        transform: none !important;
+/* Extra small mobile devices */
+@media (max-width: 480px) {
+    .hero h1 {
+        font-size: 1.8rem;
+    }
+    
+    .hero .subtitle {
+        font-size: 1rem;
+    }
+    
+    .section-title {
+        font-size: 1.6rem;
+    }
+    
+    .content-card .content-body {
+        padding: 1rem;
+    }
+    
+    .content-card h3 {
+        font-size: 0.95rem;
+    }
+    
+    .content-card p {
+        font-size: 0.85rem;
+    }
+    
+    .container {
+        padding: 0 10px;
+    }
+    
+    .cta-button {
+        min-width: 180px;
+        padding: 12px 20px;
+        font-size: 0.9rem;
     }
 }
