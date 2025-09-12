@@ -231,15 +231,13 @@
       if (posts && posts.length > 0) {
         container.innerHTML = posts.map(post => `
   <article class="content-card">
-    <div class="content-type">Article</div>
-    <div class="content-body">
+    <div class="content-type">
       ${post.categories && post.categories.length > 0 ? 
-        `<div class="post-categories">
-          ${post.categories.map(cat => 
-            `<a href="/category/${cat.slug.current}" class="category-tag">${cat.title}</a>`
-          ).join('')}
-        </div>` : ''
+        `<a href="/category/${post.categories[0].slug.current}" class="category-link">${post.categories[0].title.toUpperCase()}</a>` : 
+        'ARTICLE'
       }
+    </div>
+    <div class="content-body">
       <h3><a href="/blog/${post.slug?.current || 'post'}">${post.title || 'Untitled'}</a></h3>
       <p class="muted" style="color:#666; margin:.25rem 0 0.6rem; font-size: 0.9rem;">
         ${post.publishedAt ? formatDate(post.publishedAt) : 'No date'}
