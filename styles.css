@@ -665,29 +665,44 @@ nav {
     transition: 0.3s;
 }
 
-/* Replace the existing @media (max-width: 768px) section in styles.css with this: */
+/* Complete replacement for lines 669-898 in styles.css */
 
 @media (max-width: 768px) {
+    .hero {
+        padding: 100px 0 60px;
+    }
+    
     .hero h1 {
-        font-size: 2.5rem;
+        font-size: 2.2rem;
     }
     
     .hero .subtitle {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         padding: 0 15px;
     }
     
     .hero .tagline {
-        font-size: 1.1rem;
+        font-size: 1.0rem;
         padding: 0 15px;
     }
     
     .hero .description {
         padding: 0 15px;
+        font-size: 1rem;
     }
     
     .nav-toggle {
         display: flex;
+        flex-direction: column;
+        cursor: pointer;
+    }
+    
+    .nav-toggle span {
+        width: 25px;
+        height: 3px;
+        background: #333;
+        margin: 3px 0;
+        transition: 0.3s;
     }
     
     .nav-links {
@@ -730,6 +745,10 @@ nav {
         background: rgba(102, 126, 234, 0.1);
     }
     
+    .container {
+        padding: 0 15px;
+    }
+    
     /* Blog page specific mobile fixes */
     .section {
         padding: 50px 0;
@@ -747,7 +766,7 @@ nav {
     }
     
     .thought-leadership-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr !important;
         gap: 1.5rem;
         padding: 0 10px;
     }
@@ -834,16 +853,6 @@ nav {
     }
     
     /* Fix overlapping sections on mobile */
-    .section {
-        padding: 60px 0;
-    }
-    
-    /* Ensure proper stacking order */
-    .hero {
-        position: relative;
-        z-index: 1;
-    }
-    
     .main-content {
         position: relative;
         z-index: 2;
@@ -863,6 +872,11 @@ nav {
     .scroll-indicator {
         font-size: 1.5rem;
         bottom: 20px;
+    }
+    
+    .profile-image {
+        width: 150px;
+        height: 150px;
     }
 }
 
@@ -900,5 +914,10 @@ nav {
         min-width: 180px;
         padding: 12px 20px;
         font-size: 0.9rem;
+    }
+    
+    .profile-image {
+        width: 120px;
+        height: 120px;
     }
 }
