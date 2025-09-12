@@ -442,14 +442,22 @@
                 const bodyHtml = blocksToHtml(post.body);
                 
                 let content = `<h1>${post.title}</h1>`;
-                
-                if (post.publishedAt) {
-                    content += `<div class="article-meta">${formatDate(post.publishedAt)}</div>`;
-                }
-                
-                if (post.excerpt) {
-                    content += `<div class="article-excerpt">${post.excerpt}</div>`;
-                }
+
+if (post.publishedAt) {
+    content += `<div class="article-meta">${formatDate(post.publishedAt)}</div>`;
+}
+
+if (post.categories && post.categories.length > 0) {
+    content += `<div class="post-categories-header">
+        ${post.categories.map(cat => 
+            `<a href="/category/${cat.slug.current}" class="post-category-tag">${cat.title}</a>`
+        ).join('')}
+    </div>`;
+}
+
+if (post.excerpt) {
+    content += `<div class="article-excerpt">${post.excerpt}</div>`;
+}
                 
                 content += bodyHtml;
                 
