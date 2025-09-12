@@ -469,9 +469,16 @@ function generateBlogPostHTML(post) {
             <article class="article-content">
                 <div class="article-body">
                     <h1>${post.title}</h1>
-                    ${post.publishedAt ? `<div class="article-meta">${formatDate(post.publishedAt)}</div>` : ''}
-                    ${post.excerpt ? `<div class="article-excerpt">${post.excerpt}</div>` : ''}
-                    ${blocksToHtml(post.body)}
+${post.publishedAt ? `<div class="article-meta">${formatDate(post.publishedAt)}</div>` : ''}
+${post.categories && post.categories.length > 0 ? 
+  `<div class="post-categories-header">
+    ${post.categories.map(cat => 
+      `<a href="/category/${cat.slug.current}" class="post-category-tag">${cat.title}</a>`
+    ).join('')}
+  </div>` : ''
+}
+${post.excerpt ? `<div class="article-excerpt">${post.excerpt}</div>` : ''}
+${blocksToHtml(post.body)}
                 </div>
             </article>
         </div>
