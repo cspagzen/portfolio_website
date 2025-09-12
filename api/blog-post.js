@@ -72,16 +72,23 @@ function blocksToHtml(blocks) {
   if (!blocks || !Array.isArray(blocks)) return '<p>No content available.</p>';
   
   let html = '';
+  let inList = false;
+  let listType = null;
   
-  blocks.forEach(block => {
+  blocks.forEach((block, index) => {
+    // Handle text blocks (paragraphs, headings, etc.)
     if (block._type === 'block' && block.children) {
       const style = block.style || 'normal';
+      const listItem = block.listItem;
+      const level = block.level || 1;
       
+      // Process text content with marks (bold, italic, etc.)
       const text = block.children
         .map(child => {
           if (child._type === 'span') {
             let content = child.text || '';
             
+            // Apply text marks
             if (child.marks && child.marks.length > 0) {
               child.marks.forEach(mark => {
                 switch (mark) {
@@ -95,10 +102,15 @@ function blocksToHtml(blocks) {
                     content = `<u>${content}</u>`;
                     break;
                   case 'strike-through':
+                  case 'strike':
                     content = `<s>${content}</s>`;
                     break;
                   case 'code':
                     content = `<code>${content}</code>`;
+                    break;
+                  case 'link':
+                    // Handle links (you'd need to process the mark data)
+                    content = `<a href="#" target="_blank">${content}</a>`;
                     break;
                 }
               });
@@ -111,37 +123,196 @@ function blocksToHtml(blocks) {
         .join('');
       
       if (text.trim()) {
-        switch (style) {
-          case 'h1':
-            html += `<h1>${text}</h1>`;
-            break;
-          case 'h2':
-            html += `<h2>${text}</h2>`;
-            break;
-          case 'h3':
-            html += `<h3>${text}</h3>`;
-            break;
-          case 'h4':
-            html += `<h4>${text}</h4>`;
-            break;
-          case 'h5':
-            html += `<h5>${text}</h5>`;
-            break;
-          case 'h6':
-            html += `<h6>${text}</h6>`;
-            break;
-          case 'blockquote':
-            html += `<blockquote>${text}</blockquote>`;
-            break;
-          default:
-            html += `<p>${text}</p>`;
-            break;
+        // Handle list items
+        if (listItem === 'bullet' || listItem === 'number') {
+          const currentListType = listItem === 'bullet' ? 'ul' : 'ol';
+          
+          // Start new list or continue existing
+          if (!inList || listType !== currentListType) {
+            if (inList) html += `</${listType}>`;
+            html += `<${currentListType}>`;
+            inList = true;
+            listType = currentListType;
+          }
+          
+          html += `<li>${text}</li>`;
+        } else {
+          // Close any open list
+          if (inList) {
+            html += `</${listType}>`;
+            inList = false;
+            listType = null;
+          }
+          
+          // Handle regular blocks
+          switch (style) {
+            case 'h1':
+              html += `<h1>${text}</h1>`;
+              break;
+            case 'h2':
+              html += `<h2>${text}</h2>`;
+              break;
+            case 'h3':
+              html += `<h3>${text}</h3>`;
+              break;
+            case 'h4':
+              html += `<h4>${text}</h4>`;
+              break;
+            case 'h5':
+              html += `<h5>${text}</h5>`;
+              break;
+            case 'h6':
+              html += `<h6>${text}</h6>`;
+              break;
+            case 'blockquote':
+              html += `<blockquote>${text}</blockquote>`;
+              break;
+            default:
+              html += `<p>${text}</p>`;
+              break;
+          }
         }
       }
     }
+    
+    // Handle images
+    else if (block._type === 'image') {
+      // Close any open list
+      if (inList) {
+        html += `</${listType}>`;
+        inList = false;
+        listType = null;
+      }
+      
+      let imageUrl = '';
+      if (block.asset && block.asset._ref) {
+        // Convert Sanity asset reference to URL
+        const ref = block.asset._ref;
+        const [, id, dimensions, format] = ref.split('-');
+        imageUrl = `https://cdn.sanity.io/images/bcqvqm54/production/${id}-${dimensions}.${format}`;
+      }
+      
+      const alt = block.alt || '';
+      const caption = block.caption || '';
+      
+      html += `
+        <figure style="margin: 30px 0; text-align: center;">
+          <img src="${imageUrl}" alt="${alt}" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
+          ${caption ? `<figcaption style="margin-top: 10px; font-style: italic; color: #666; font-size: 0.9rem;">${caption}</figcaption>` : ''}
+        </figure>
+      `;
+    }
+    
+    // Handle code blocks
+    else if (block._type === 'code') {
+      // Close any open list
+      if (inList) {
+        html += `</${listType}>`;
+        inList = false;
+        listType = null;
+      }
+      
+      const language = block.language || 'text';
+      const code = block.code || '';
+      
+      html += `
+        <pre style="background: #f8f9fa; padding: 20px; border-radius: 8px; overflow-x: auto; margin: 25px 0; border-left: 4px solid #667eea;">
+          <code class="language-${language}">${escapeHtml(code)}</code>
+        </pre>
+      `;
+    }
+    
+    // Handle tables
+    else if (block._type === 'table') {
+      // Close any open list
+      if (inList) {
+        html += `</${listType}>`;
+        inList = false;
+        listType = null;
+      }
+      
+      if (block.rows && block.rows.length > 0) {
+        html += '<table style="width: 100%; border-collapse: collapse; margin: 25px 0; border: 1px solid #ddd;">';
+        
+        block.rows.forEach((row, rowIndex) => {
+          html += '<tr>';
+          if (row.cells) {
+            row.cells.forEach(cell => {
+              const tag = rowIndex === 0 ? 'th' : 'td';
+              const style = rowIndex === 0 ? 
+                'style="background: #f8f9fa; padding: 12px; border: 1px solid #ddd; font-weight: bold;"' :
+                'style="padding: 12px; border: 1px solid #ddd;"';
+              html += `<${tag} ${style}>${cell || ''}</${tag}>`;
+            });
+          }
+          html += '</tr>';
+        });
+        
+        html += '</table>';
+      }
+    }
+    
+    // Handle custom blocks (you can extend this for your specific needs)
+    else if (block._type === 'youtube' || block._type === 'video') {
+      // Close any open list
+      if (inList) {
+        html += `</${listType}>`;
+        inList = false;
+        listType = null;
+      }
+      
+      const videoId = block.videoId || block.url;
+      if (videoId) {
+        html += `
+          <div style="margin: 30px 0; text-align: center;">
+            <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px;">
+              <iframe src="https://www.youtube.com/embed/${videoId}" 
+                      style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"
+                      allowfullscreen>
+              </iframe>
+            </div>
+          </div>
+        `;
+      }
+    }
+    
+    // Handle breaks/dividers
+    else if (block._type === 'break' || block._type === 'divider') {
+      // Close any open list
+      if (inList) {
+        html += `</${listType}>`;
+        inList = false;
+        listType = null;
+      }
+      
+      html += '<hr style="margin: 40px 0; border: none; height: 2px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);" />';
+    }
+    
+    // Handle any other custom block types
+    else if (block._type && block._type !== 'span') {
+      console.log(`Unhandled block type: ${block._type}`, block);
+      // You can add specific handlers for your custom block types here
+    }
   });
   
+  // Close any remaining open list
+  if (inList) {
+    html += `</${listType}>`;
+  }
+  
   return html || '<p>No content available.</p>';
+}
+
+// Helper function to escape HTML
+function escapeHtml(text) {
+  const map = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  };
+  return text.replace(/[&<>"']/g, m => map[m]);
 }
 
 function formatDate(dateString) {
