@@ -2,12 +2,19 @@
   "functions": {
     "api/blog-post.js": {
       "memory": 1024
+    },
+    "api/category.js": {
+      "memory": 1024
     }
   },
   "rewrites": [
     {
       "source": "/blog/:slug",
       "destination": "/api/blog-post?slug=:slug"
+    },
+    {
+      "source": "/category/:slug",
+      "destination": "/api/category?slug=:slug"
     }
   ]
 }

@@ -207,12 +207,13 @@
 
       // Fetch posts from Sanity using direct API
       const postsQuery = `*[_type == "post" && defined(publishedAt)] | order(publishedAt desc) [${start}...${end}] {
-        title,
-        slug,
-        excerpt,
-        publishedAt,
-        body
-      }`;
+  title,
+  slug,
+  excerpt,
+  publishedAt,
+  body,
+  categories[]->{title, slug}
+}`;
 
       const totalQuery = `count(*[_type == "post" && defined(publishedAt)])`;
       
@@ -229,20 +230,27 @@
       // Render blog post cards
       if (posts && posts.length > 0) {
         container.innerHTML = posts.map(post => `
-          <article class="content-card">
-            <div class="content-type">Article</div>
-            <div class="content-body">
-              <h3><a href="blog/${post.slug?.current || 'post'}">${post.title || 'Untitled'}</a></h3>
-              <p class="muted" style="color:#666; margin:.25rem 0 0.6rem; font-size: 0.9rem;">
-                ${post.publishedAt ? formatDate(post.publishedAt) : 'No date'}
-              </p>
-              <p>${post.excerpt || extractText(post.body) || 'No excerpt available.'}</p>
-              <p style="margin-top:.6rem;">
-                <a href="blog/${post.slug?.current || 'post'}">Read the full article</a>
-              </p>
-            </div>
-          </article>
-        `).join('');
+  <article class="content-card">
+    <div class="content-type">Article</div>
+    <div class="content-body">
+      ${post.categories && post.categories.length > 0 ? 
+        `<div class="post-categories">
+          ${post.categories.map(cat => 
+            `<a href="/category/${cat.slug.current}" class="category-tag">${cat.title}</a>`
+          ).join('')}
+        </div>` : ''
+      }
+      <h3><a href="/blog/${post.slug?.current || 'post'}">${post.title || 'Untitled'}</a></h3>
+      <p class="muted" style="color:#666; margin:.25rem 0 0.6rem; font-size: 0.9rem;">
+        ${post.publishedAt ? formatDate(post.publishedAt) : 'No date'}
+      </p>
+      <p>${post.excerpt || extractText(post.body) || 'No excerpt available.'}</p>
+      <p style="margin-top:.6rem;">
+        <a href="/blog/${post.slug?.current || 'post'}">Read the full article</a>
+      </p>
+    </div>
+  </article>
+`).join('');
       } else {
         container.innerHTML = '<p>No posts found. Create some posts in your Sanity Studio!</p>';
       }
