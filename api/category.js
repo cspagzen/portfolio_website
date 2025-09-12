@@ -172,6 +172,15 @@ function generateErrorPage(message) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Error - Chris Spagnuolo</title>
     <link rel="stylesheet" href="/styles.css">
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-784EYD369G"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-784EYD369G');
+</script>
 </head>
 <body>
     <header>

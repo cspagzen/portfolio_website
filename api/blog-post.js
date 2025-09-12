@@ -333,6 +333,15 @@ function generateBlogPostHTML(post) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${post.title} - Chris Spagnuolo</title>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-784EYD369G"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-784EYD369G');
+</script>
     
     <!-- Open Graph meta tags for social media previews -->
     <meta property="og:type" content="article">
