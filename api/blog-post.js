@@ -15,8 +15,12 @@ export default async function handler(req, res) {
       slug,
       excerpt,
       publishedAt,
-      body
-    }`;
+      body,
+  categories[]->{
+    title,
+    slug
+  }
+}`;
     
     const encodedQuery = encodeURIComponent(query);
     const url = `https://${PROJECT_ID}.api.sanity.io/v2024-01-01/data/query/${DATASET}?query=${encodedQuery}`;
