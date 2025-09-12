@@ -76,20 +76,18 @@ function generateCategoryPageHTML(category, posts) {
   
   const postsHTML = posts.length > 0 ? posts.map(post => `
     <article class="content-card">
-      <div class="content-type">Article</div>
-      <div class="content-body">
+      <div class="content-type">
         ${post.categories && post.categories.length > 0 ? 
-          `<div class="post-categories">
-            ${post.categories.map(cat => 
-              `<a href="/category/${cat.slug.current}" class="category-tag">${cat.title}</a>`
-            ).join('')}
-          </div>` : ''
+          `<a href="/category/${post.categories[0].slug.current}" class="category-link">${post.categories[0].title.toUpperCase()}</a>` : 
+          'ARTICLE'
         }
+      </div>
+      <div class="content-body">
         <h3><a href="/blog/${post.slug.current}">${post.title}</a></h3>
         <p class="muted" style="color:#666; margin:.25rem 0 0.6rem; font-size: 0.9rem;">
           ${formatDate(post.publishedAt)}
         </p>
-        <p>${post.excerpt || 'No excerpt available.'}</p>
+        <p>${post.excerpt || extractText(post.body) || 'No excerpt available.'}</p>
         <p style="margin-top:.6rem;">
           <a href="/blog/${post.slug.current}">Read the full article</a>
         </p>
