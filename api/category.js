@@ -87,7 +87,7 @@ function generateCategoryPageHTML(category, posts) {
         <p class="muted" style="color:#666; margin:.25rem 0 0.6rem; font-size: 0.9rem;">
           ${formatDate(post.publishedAt)}
         </p>
-        <p>${post.excerpt || 'Backlogs reward activity. Portfolios reward outcomes. Here is a practical shift that raises focus, improves conversations, and restores energy.'}</p>
+        <p>${post.excerpt || extractText(post.body) || 'No excerpt available.'}</p>
         <p style="margin-top:.6rem;">
           <a href="/blog/${post.slug.current}">Read the full article</a>
         </p>
