@@ -316,39 +316,7 @@
 });
     </script>
     
-    // Add this JavaScript to your blog.html file, right after the existing script
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Mobile menu toggle functionality
-    const navToggle = document.querySelector('.nav-toggle');
-    const navLinks = document.querySelector('.nav-links');
     
-    if (navToggle && navLinks) {
-        navToggle.addEventListener('click', function() {
-            navLinks.classList.toggle('nav-open');
-            
-            // Update aria-expanded for accessibility
-            const isOpen = navLinks.classList.contains('nav-open');
-            navToggle.setAttribute('aria-expanded', isOpen);
-        });
-        
-        // Close menu when clicking on a link
-        navLinks.addEventListener('click', function(e) {
-            if (e.target.tagName === 'A') {
-                navLinks.classList.remove('nav-open');
-                navToggle.setAttribute('aria-expanded', 'false');
-            }
-        });
-        
-        // Close menu when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!navToggle.contains(e.target) && !navLinks.contains(e.target)) {
-                navLinks.classList.remove('nav-open');
-                navToggle.setAttribute('aria-expanded', 'false');
-            }
-        });
-    }
-});
     
 </body>
 </html>
