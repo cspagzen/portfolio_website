@@ -211,64 +211,19 @@
         </section>
 
         <section id="thought-leadership" class="section">
-            <div class="container">
-                <h2 class="section-title">Thought Leadership</h2>
-                <div class="section-subtitle">Insights on product strategy, innovation, and leadership</div>
-                <div class="thought-leadership-grid">
-                    <div class="content-card">
-                        <div class="content-type">Podcast</div>
-                        <div class="content-body">
-                            <h3>Avoiding Product Management Dogma</h3>
-                            <p><a href="https://productmasterynow.com/blog/tei-130-avoiding-product-management-dogma-with-chris-spagnuolo/" target="_blank">Listen on Product Mastery Now</a></p>
-                        </div>
-                    </div>
-                    
-                    <div class="content-card">
-                        <div class="content-type">Video</div>
-                        <div class="content-body">
-                            <h3>Design Thinking in Practice</h3>
-                            <p><a href="https://www.youtube.com/watch?v=5_Ip-jA4hhg" target="_blank">Watch on YouTube</a></p>
-                        </div>
-                    </div>
-                    
-                    <div class="content-card">
-                        <div class="content-type">Video</div>
-                        <div class="content-body">
-                            <h3>Challenges Around Alignment and Autonomy</h3>
-                            <p><a href="https://www.youtube.com/watch?v=iNZN9DGgXYU" target="_blank">Watch on YouTube</a></p>
-                        </div>
-                    </div>
-                    
-                    <div class="content-card">
-                        <div class="content-type">Podcast</div>
-                        <div class="content-body">
-                            <h3>Innovation in the Enterprise</h3>
-                            <p><a href="https://liminalarcgroup.podbean.com/e/it2-innovation-in-the-enterprise-chris-spagnuolo/" target="_blank">Listen on Liminal Arc</a></p>
-                        </div>
-                    </div>
-                    
-                    <div class="content-card">
-                        <div class="content-type">Article</div>
-                        <div class="content-body">
-                            <h3>What Can Haruki Murakami Teach Us About Sustainable Pace?</h3>
-                            <p><a href="https://www.liminalarc.co/2014/11/haruki-murakami-teaches-sustainable-pace/" target="_blank">Read on Liminal Arc</a></p>
-                        </div>
-                    </div>
-                    
-                    <div class="content-card">
-                        <div class="content-type">Article</div>
-                        <div class="content-body">
-                            <h3>Product Vision Tools: The Product Vision Board</h3>
-                            <p><a href="https://www.liminalarc.co/2014/03/product-vision-tools/" target="_blank">Read on Liminal Arc</a></p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div style="text-align: center; margin-top: 3rem;">
-                    <a href="blog.html" class="cta-button secondary">Explore More Insights</a>
-                </div>
-            </div>
-        </section>
+    <div class="container">
+        <h2 class="section-title">Latest Insights</h2>
+        <div class="section-subtitle">Fresh perspectives on product strategy, leadership, and innovation</div>
+        <div id="blog-posts-container" class="thought-leadership-grid">
+            <!-- Blog posts will be loaded here -->
+            <div class="loading-state">Loading latest articles...</div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 3rem;">
+            <a href="blog.html" class="cta-button secondary">Read All Articles</a>
+        </div>
+    </div>
+</section>
 
         <section id="testimonials" class="testimonials-section section">
     <div class="container">
@@ -414,5 +369,156 @@
 
     <script src="script.js"></script>
     <script defer src="/_vercel/insights/script.js"></script>
+    <!-- Blog Posts Loading Script -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    loadBlogPosts();
+    
+    async function loadBlogPosts() {
+        const PROJECT_ID = 'bcqvqm54';
+        const DATASET = 'production';
+        const container = document.getElementById('blog-posts-container');
+        
+        try {
+            // Fetch 6 latest blog posts from Sanity
+            const query = `*[_type == "post" && defined(publishedAt)] | order(publishedAt desc) [0...6] {
+                title,
+                slug,
+                excerpt,
+                publishedAt,
+                body,
+                categories[]->{title, slug}
+            }`;
+            
+            const encodedQuery = encodeURIComponent(query);
+            const url = `https://${PROJECT_ID}.api.sanity.io/v2024-01-01/data/query/${DATASET}?query=${encodedQuery}`;
+            
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Sanity API error: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            const posts = data.result;
+            
+            if (posts && posts.length > 0) {
+                renderBlogPosts(posts);
+            } else {
+                showFallbackContent();
+            }
+            
+        } catch (error) {
+            console.error('Error loading blog posts:', error);
+            showFallbackContent();
+        }
+    }
+    
+    function formatDate(dateString) {
+        return new Date(dateString).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    }
+    
+    function extractText(blocks) {
+        if (!blocks || !Array.isArray(blocks)) return '';
+        
+        return blocks
+            .filter(block => block._type === 'block')
+            .map(block => {
+                if (block.children && Array.isArray(block.children)) {
+                    return block.children
+                        .filter(child => child._type === 'span')
+                        .map(child => child.text || '')
+                        .join('');
+                }
+                return '';
+            })
+            .join(' ')
+            .substring(0, 120) + '...';
+    }
+    
+    function renderBlogPosts(posts) {
+        const container = document.getElementById('blog-posts-container');
+        
+        const html = posts.map(post => `
+            <div class="content-card">
+                <div class="content-type">
+                    ${post.categories && post.categories.length > 0 ? 
+                        post.categories[0].title.toUpperCase() : 
+                        'ARTICLE'
+                    }
+                </div>
+                <div class="content-body">
+                    <h3>${post.title || 'Untitled'}</h3>
+                    <p class="post-date" style="color:#888; font-size:0.9rem; margin:0.5rem 0;">
+                        ${post.publishedAt ? formatDate(post.publishedAt) : ''}
+                    </p>
+                    <p>${post.excerpt || extractText(post.body) || 'No excerpt available.'}</p>
+                    <p><a href="blog-post.html?slug=${post.slug?.current || 'post'}">Read the full article</a></p>
+                </div>
+            </div>
+        `).join('');
+        
+        container.innerHTML = html;
+    }
+    
+    function showFallbackContent() {
+        const container = document.getElementById('blog-posts-container');
+        
+        // Show previous thought leadership content as fallback
+        container.innerHTML = `
+            <div class="content-card">
+                <div class="content-type">Podcast</div>
+                <div class="content-body">
+                    <h3>Avoiding Product Management Dogma</h3>
+                    <p><a href="https://productmasterynow.com/blog/tei-130-avoiding-product-management-dogma-with-chris-spagnuolo/" target="_blank">Listen on Product Mastery Now</a></p>
+                </div>
+            </div>
+            
+            <div class="content-card">
+                <div class="content-type">Video</div>
+                <div class="content-body">
+                    <h3>Design Thinking in Practice</h3>
+                    <p><a href="https://www.youtube.com/watch?v=5_Ip-jA4hhg" target="_blank">Watch on YouTube</a></p>
+                </div>
+            </div>
+            
+            <div class="content-card">
+                <div class="content-type">Video</div>
+                <div class="content-body">
+                    <h3>Challenges Around Alignment and Autonomy</h3>
+                    <p><a href="https://www.youtube.com/watch?v=iNZN9DGgXYU" target="_blank">Watch on YouTube</a></p>
+                </div>
+            </div>
+            
+            <div class="content-card">
+                <div class="content-type">Podcast</div>
+                <div class="content-body">
+                    <h3>Innovation in the Enterprise</h3>
+                    <p><a href="https://liminalarcgroup.podbean.com/e/it2-innovation-in-the-enterprise-chris-spagnuolo/" target="_blank">Listen on Liminal Arc</a></p>
+                </div>
+            </div>
+            
+            <div class="content-card">
+                <div class="content-type">Article</div>
+                <div class="content-body">
+                    <h3>What Can Haruki Murakami Teach Us About Sustainable Pace?</h3>
+                    <p><a href="https://www.liminalarc.co/2014/11/haruki-murakami-teaches-sustainable-pace/" target="_blank">Read on Liminal Arc</a></p>
+                </div>
+            </div>
+            
+            <div class="content-card">
+                <div class="content-type">Article</div>
+                <div class="content-body">
+                    <h3>Product Vision Tools: The Product Vision Board</h3>
+                    <p><a href="https://www.liminalarc.co/2014/03/product-vision-tools/" target="_blank">Read on Liminal Arc</a></p>
+                </div>
+            </div>
+        `;
+    }
+});
+</script>
 </body>
 </html>
