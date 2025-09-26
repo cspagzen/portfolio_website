@@ -323,80 +323,89 @@
             }
             
             function blocksToHtml(blocks) {
-                if (!blocks || !Array.isArray(blocks)) return '<p>No content available.</p>';
-                
-                let html = '';
-                
-                blocks.forEach(block => {
-                    if (block._type === 'block' && block.children) {
-                        const style = block.style || 'normal';
+    if (!blocks || !Array.isArray(blocks)) return '<p>No content available.</p>';
+    
+    let html = '';
+    
+    blocks.forEach(block => {
+        if (block._type === 'block' && block.children) {
+            const style = block.style || 'normal';
+            const markDefs = block.markDefs || [];
+            
+            const text = block.children
+                .map(child => {
+                    if (child._type === 'span') {
+                        let content = child.text || '';
                         
-                        const text = block.children
-                            .map(child => {
-                                if (child._type === 'span') {
-                                    let content = child.text || '';
-                                    
-                                    if (child.marks && child.marks.length > 0) {
-                                        child.marks.forEach(mark => {
-                                            switch (mark) {
-                                                case 'strong':
-                                                    content = `<strong>${content}</strong>`;
-                                                    break;
-                                                case 'em':
-                                                    content = `<em>${content}</em>`;
-                                                    break;
-                                                case 'underline':
-                                                    content = `<u>${content}</u>`;
-                                                    break;
-                                                case 'strike-through':
-                                                    content = `<s>${content}</s>`;
-                                                    break;
-                                                case 'code':
-                                                    content = `<code>${content}</code>`;
-                                                    break;
-                                            }
-                                        });
+                        if (child.marks && child.marks.length > 0) {
+                            child.marks.forEach(mark => {
+                                // Check if it's a link mark (references markDefs)
+                                const linkDef = markDefs.find(def => def._key === mark);
+                                if (linkDef && linkDef._type === 'link') {
+                                    content = `<a href="${linkDef.href}" target="_blank" rel="noopener">${content}</a>`;
+                                } else {
+                                    // Handle other formatting marks
+                                    switch (mark) {
+                                        case 'strong':
+                                            content = `<strong>${content}</strong>`;
+                                            break;
+                                        case 'em':
+                                            content = `<em>${content}</em>`;
+                                            break;
+                                        case 'underline':
+                                            content = `<u>${content}</u>`;
+                                            break;
+                                        case 'strike-through':
+                                            content = `<s>${content}</s>`;
+                                            break;
+                                        case 'code':
+                                            content = `<code>${content}</code>`;
+                                            break;
                                     }
-                                    
-                                    return content;
                                 }
-                                return '';
-                            })
-                            .join('');
-                        
-                        if (text.trim()) {
-                            switch (style) {
-                                case 'h1':
-                                    html += `<h1>${text}</h1>`;
-                                    break;
-                                case 'h2':
-                                    html += `<h2>${text}</h2>`;
-                                    break;
-                                case 'h3':
-                                    html += `<h3>${text}</h3>`;
-                                    break;
-                                case 'h4':
-                                    html += `<h4>${text}</h4>`;
-                                    break;
-                                case 'h5':
-                                    html += `<h5>${text}</h5>`;
-                                    break;
-                                case 'h6':
-                                    html += `<h6>${text}</h6>`;
-                                    break;
-                                case 'blockquote':
-                                    html += `<blockquote>${text}</blockquote>`;
-                                    break;
-                                default:
-                                    html += `<p>${text}</p>`;
-                                    break;
-                            }
+                            });
                         }
+                        
+                        return content;
                     }
-                });
-                
-                return html || '<p>No content available.</p>';
+                    return '';
+                })
+                .join('');
+            
+            // Rest of your existing style handling code...
+            if (text.trim()) {
+                switch (style) {
+                    case 'h1':
+                        html += `<h1>${text}</h1>`;
+                        break;
+                    case 'h2':
+                        html += `<h2>${text}</h2>`;
+                        break;
+                    case 'h3':
+                        html += `<h3>${text}</h3>`;
+                        break;
+                    case 'h4':
+                        html += `<h4>${text}</h4>`;
+                        break;
+                    case 'h5':
+                        html += `<h5>${text}</h5>`;
+                        break;
+                    case 'h6':
+                        html += `<h6>${text}</h6>`;
+                        break;
+                    case 'blockquote':
+                        html += `<blockquote>${text}</blockquote>`;
+                        break;
+                    default:
+                        html += `<p>${text}</p>`;
+                        break;
+                }
             }
+        }
+    });
+    
+    return html || '<p>No content available.</p>';
+}
             
             async function loadPost(slug) {
                 try {
