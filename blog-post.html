@@ -292,7 +292,8 @@
             const DATASET = 'production';
             
             const urlParams = new URLSearchParams(window.location.search);
-            const slug = urlParams.get('slug');
+            const pathParts = window.location.pathname.split('/');
+            const slug = pathParts[pathParts.length - 1];
             
             if (!slug) {
                 showError('No post specified. Please return to the blog page.');
@@ -339,7 +340,7 @@
                         
                         if (child.marks && child.marks.length > 0) {
                             child.marks.forEach(mark => {
-                                // Check if it's a link mark (references markDefs)
+                                // Check if it's a link mark
                                 const linkDef = markDefs.find(def => def._key === mark);
                                 if (linkDef && linkDef._type === 'link') {
                                     content = `<a href="${linkDef.href}" target="_blank" rel="noopener">${content}</a>`;
@@ -372,33 +373,16 @@
                 })
                 .join('');
             
-            // Rest of your existing style handling code...
             if (text.trim()) {
                 switch (style) {
-                    case 'h1':
-                        html += `<h1>${text}</h1>`;
-                        break;
-                    case 'h2':
-                        html += `<h2>${text}</h2>`;
-                        break;
-                    case 'h3':
-                        html += `<h3>${text}</h3>`;
-                        break;
-                    case 'h4':
-                        html += `<h4>${text}</h4>`;
-                        break;
-                    case 'h5':
-                        html += `<h5>${text}</h5>`;
-                        break;
-                    case 'h6':
-                        html += `<h6>${text}</h6>`;
-                        break;
-                    case 'blockquote':
-                        html += `<blockquote>${text}</blockquote>`;
-                        break;
-                    default:
-                        html += `<p>${text}</p>`;
-                        break;
+                    case 'h1': html += `<h1>${text}</h1>`; break;
+                    case 'h2': html += `<h2>${text}</h2>`; break;
+                    case 'h3': html += `<h3>${text}</h3>`; break;
+                    case 'h4': html += `<h4>${text}</h4>`; break;
+                    case 'h5': html += `<h5>${text}</h5>`; break;
+                    case 'h6': html += `<h6>${text}</h6>`; break;
+                    case 'blockquote': html += `<blockquote>${text}</blockquote>`; break;
+                    default: html += `<p>${text}</p>`; break;
                 }
             }
         }
