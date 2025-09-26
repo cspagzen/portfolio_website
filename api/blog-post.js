@@ -79,6 +79,7 @@ function blocksToHtml(blocks) {
     // Handle text blocks (paragraphs, headings, etc.)
     if (block._type === 'block' && block.children) {
       const style = block.style || 'normal';
+      const markDefs = block.markDefs || [];
       const listItem = block.listItem;
       const level = block.level || 1;
       
@@ -90,31 +91,34 @@ function blocksToHtml(blocks) {
             
             // Apply text marks
             if (child.marks && child.marks.length > 0) {
-              child.marks.forEach(mark => {
-                switch (mark) {
-                  case 'strong':
+    child.marks.forEach(mark => {
+        // Check for links first
+        const linkDef = markDefs.find(def => def._key === mark);
+        if (linkDef && linkDef._type === 'link') {
+            content = `<a href="${linkDef.href}" target="_blank" rel="noopener">${content}</a>`;
+        } else {
+            // Handle other formatting marks
+            switch (mark) {
+                case 'strong':
                     content = `<strong>${content}</strong>`;
                     break;
-                  case 'em':
+                case 'em':
                     content = `<em>${content}</em>`;
                     break;
-                  case 'underline':
+                case 'underline':
                     content = `<u>${content}</u>`;
                     break;
-                  case 'strike-through':
-                  case 'strike':
+                case 'strike-through':
+                case 'strike':
                     content = `<s>${content}</s>`;
                     break;
-                  case 'code':
+                case 'code':
                     content = `<code>${content}</code>`;
                     break;
-                  case 'link':
-                    // Handle links (you'd need to process the mark data)
-                    content = `<a href="#" target="_blank">${content}</a>`;
-                    break;
-                }
-              });
             }
+        }
+    });
+}
             
             return content;
           }
