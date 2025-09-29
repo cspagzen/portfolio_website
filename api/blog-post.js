@@ -11,11 +11,12 @@ export default async function handler(req, res) {
     const PROJECT_ID = 'bcqvqm54';
     const DATASET = 'production';
     const query = `*[_type == "post" && slug.current == "${slug}"][0] {
-      title,
-      slug,
-      excerpt,
-      publishedAt,
-      body,
+  title,
+  slug,
+  excerpt,
+  publishedAt,
+  body,
+  mainImage,  // Add this
   categories[]->{
     title,
     slug
@@ -331,6 +332,14 @@ function generateBlogPostHTML(post) {
   const description = post.excerpt || extractFirstParagraph(post.body);
   const currentUrl = `https://chrisspagnuolo.info/blog/${post.slug.current}`;
   
+  // Add this block to handle the featured image
+  let imageUrl = 'https://chrisspagnuolo.info/your-photo.jpg'; // fallback
+  if (post.mainImage && post.mainImage.asset && post.mainImage.asset._ref) {
+    const ref = post.mainImage.asset._ref;
+    const [, id, dimensions, format] = ref.split('-');
+    imageUrl = `https://cdn.sanity.io/images/bcqvqm54/production/${id}-${dimensions}.${format}`;
+  }
+  
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -353,14 +362,14 @@ function generateBlogPostHTML(post) {
     <meta property="og:url" content="${currentUrl}">
     <meta property="og:title" content="${post.title}">
     <meta property="og:description" content="${description}">
-    <meta property="og:image" content="https://chrisspagnuolo.info/your-photo.jpg">
-    
+    <meta property="og:image" content="${imageUrl}">
+
     <!-- Twitter Card meta tags -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:site" content="@chrisspagnuolo">
-    <meta name="twitter:title" content="${post.title}">
-    <meta name="twitter:description" content="${description}">
-    <meta name="twitter:image" content="https://chrisspagnuolo.info/your-photo.jpg">
+      <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:site" content="@chrisspagnuolo">
+        <meta name="twitter:title" content="${post.title}">
+        <meta name="twitter:description" content="${description}">
+        <meta name="twitter:image" content="${imageUrl}">
     
     <link rel="stylesheet" href="/styles.css">
     <style>
