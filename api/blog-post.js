@@ -257,7 +257,7 @@ function blocksToHtml(blocks) {
       }
     }
     
-    // Handle custom blocks (you can extend this for your specific needs)
+    // Handle custom blocks
     else if (block._type === 'youtube' || block._type === 'video') {
       // Close any open list
       if (inList) {
@@ -281,6 +281,143 @@ function blocksToHtml(blocks) {
           </div>
         `;
       }
+    }
+    
+    // Handle AI Prompt blocks
+    else if (block._type === 'aiPrompt') {
+      if (inList) {
+        html += `</${listType}>`;
+        inList = false;
+        listType = null;
+      }
+      
+      const content = block.body ? blocksToHtml(block.body) : block.text || '';
+      html += `
+        <div class="ai-prompt">
+          <div class="block-icon">🤖</div>
+          <div class="block-content">
+            <div class="block-title">AI Prompt</div>
+            ${content}
+          </div>
+        </div>
+      `;
+    }
+    
+    // Handle Code Block (different from inline code)
+    else if (block._type === 'codeBlock') {
+      if (inList) {
+        html += `</${listType}>`;
+        inList = false;
+        listType = null;
+      }
+      
+      const language = block.language || 'javascript';
+      const code = block.code || '';
+      html += `
+        <div class="code-block" data-language="${language}">
+          <pre><code>${escapeHtml(code)}</code></pre>
+        </div>
+      `;
+    }
+    
+    // Handle Tip blocks
+    else if (block._type === 'tip') {
+      if (inList) {
+        html += `</${listType}>`;
+        inList = false;
+        listType = null;
+      }
+      
+      const content = block.body ? blocksToHtml(block.body) : block.text || '';
+      html += `
+        <div class="tip">
+          <div class="block-icon">💡</div>
+          <div class="block-content">
+            <div class="block-title">Tip</div>
+            ${content}
+          </div>
+        </div>
+      `;
+    }
+    
+    // Handle Warning blocks
+    else if (block._type === 'warning') {
+      if (inList) {
+        html += `</${listType}>`;
+        inList = false;
+        listType = null;
+      }
+      
+      const content = block.body ? blocksToHtml(block.body) : block.text || '';
+      html += `
+        <div class="warning">
+          <div class="block-icon">⚠️</div>
+          <div class="block-content">
+            <div class="block-title">Warning</div>
+            ${content}
+          </div>
+        </div>
+      `;
+    }
+    
+    // Handle Field Notes blocks
+    else if (block._type === 'fieldNotes') {
+      if (inList) {
+        html += `</${listType}>`;
+        inList = false;
+        listType = null;
+      }
+      
+      const content = block.body ? blocksToHtml(block.body) : block.text || '';
+      html += `
+        <div class="field-notes">
+          <div class="block-icon">📝</div>
+          <div class="block-content">
+            <div class="block-title">Field Notes</div>
+            ${content}
+          </div>
+        </div>
+      `;
+    }
+    
+    // Handle Key Takeaways blocks
+    else if (block._type === 'keyTakeaways') {
+      if (inList) {
+        html += `</${listType}>`;
+        inList = false;
+        listType = null;
+      }
+      
+      const content = block.body ? blocksToHtml(block.body) : block.text || '';
+      html += `
+        <div class="key-takeaways">
+          <div class="block-icon">🎯</div>
+          <div class="block-content">
+            <div class="block-title">Key Takeaways</div>
+            ${content}
+          </div>
+        </div>
+      `;
+    }
+    
+    // Handle Pro Tip blocks
+    else if (block._type === 'proTip') {
+      if (inList) {
+        html += `</${listType}>`;
+        inList = false;
+        listType = null;
+      }
+      
+      const content = block.body ? blocksToHtml(block.body) : block.text || '';
+      html += `
+        <div class="pro-tip">
+          <div class="block-icon">⭐</div>
+          <div class="block-content">
+            <div class="block-title">Pro Tip</div>
+            ${content}
+          </div>
+        </div>
+      `;
     }
   });
   
