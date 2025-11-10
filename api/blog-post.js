@@ -16,7 +16,7 @@ export default async function handler(req, res) {
   excerpt,
   publishedAt,
   body,
-  mainImage,  // Add this
+  mainImage,
   categories[]->{
     title,
     slug
@@ -270,33 +270,17 @@ function blocksToHtml(blocks) {
       if (videoId) {
         html += `
           <div style="margin: 30px 0; text-align: center;">
-            <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px;">
-              <iframe src="https://www.youtube.com/embed/${videoId}" 
-                      style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"
-                      allowfullscreen>
+            <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%;">
+              <iframe 
+                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"
+                src="https://www.youtube.com/embed/${videoId}"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
               </iframe>
             </div>
           </div>
         `;
       }
-    }
-    
-    // Handle breaks/dividers
-    else if (block._type === 'break' || block._type === 'divider') {
-      // Close any open list
-      if (inList) {
-        html += `</${listType}>`;
-        inList = false;
-        listType = null;
-      }
-      
-      html += '<hr style="margin: 40px 0; border: none; height: 2px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);" />';
-    }
-    
-    // Handle any other custom block types
-    else if (block._type && block._type !== 'span') {
-      console.log(`Unhandled block type: ${block._type}`, block);
-      // You can add specific handlers for your custom block types here
     }
   });
   
@@ -308,14 +292,13 @@ function blocksToHtml(blocks) {
   return html || '<p>No content available.</p>';
 }
 
-// Helper function to escape HTML
 function escapeHtml(text) {
   const map = {
     '&': '&amp;',
     '<': '&lt;',
     '>': '&gt;',
     '"': '&quot;',
-    "'": '&#39;'
+    "'": '&#039;'
   };
   return text.replace(/[&<>"']/g, m => map[m]);
 }
@@ -330,22 +313,39 @@ function formatDate(dateString) {
 
 function generateBlogPostHTML(post) {
   const description = post.excerpt || extractFirstParagraph(post.body);
-  const currentUrl = `https://chrisspagnuolo.info/blog/${post.slug.current}`;
+  let imageUrl = 'https://chrisspagnuolo.info/your-photo.jpg';
   
-  // Add this block to handle the featured image
-  let imageUrl = 'https://chrisspagnuolo.info/your-photo.jpg'; // fallback
   if (post.mainImage && post.mainImage.asset && post.mainImage.asset._ref) {
     const ref = post.mainImage.asset._ref;
     const [, id, dimensions, format] = ref.split('-');
     imageUrl = `https://cdn.sanity.io/images/bcqvqm54/production/${id}-${dimensions}.${format}`;
   }
-  
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${post.title} - Chris Spagnuolo</title>
+    
+    <!-- Open Graph meta tags -->
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Chris Spagnuolo">
+    <meta property="og:url" content="https://chrisspagnuolo.info/blog/${post.slug.current}">
+    <meta property="og:title" content="${post.title}">
+    <meta property="og:description" content="${description}">
+    <meta property="og:image" content="${imageUrl}">
+    
+    <!-- Twitter Card meta tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@chrisspagnuolo">
+    <meta name="twitter:title" content="${post.title}">
+    <meta name="twitter:description" content="${description}">
+    <meta name="twitter:image" content="${imageUrl}">
+    
+    <!-- Link to external stylesheet -->
+    <link rel="stylesheet" href="/styles.css">
+    
     <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-784EYD369G"></script>
 <script>
@@ -355,282 +355,6 @@ function generateBlogPostHTML(post) {
 
   gtag('config', 'G-784EYD369G');
 </script>
-    
-    <!-- Open Graph meta tags for social media previews -->
-    <meta property="og:type" content="article">
-    <meta property="og:site_name" content="Chris Spagnuolo">
-    <meta property="og:url" content="${currentUrl}">
-    <meta property="og:title" content="${post.title}">
-    <meta property="og:description" content="${description}">
-    <meta property="og:image" content="${imageUrl}">
-
-    <!-- Twitter Card meta tags -->
-      <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:site" content="@chrisspagnuolo">
-        <meta name="twitter:title" content="${post.title}">
-        <meta name="twitter:description" content="${description}">
-        <meta name="twitter:image" content="${imageUrl}">
-    
-    <link rel="stylesheet" href="/styles.css">
-    <style>
-        .blog-main {
-            padding-top: 100px;
-            background: white;
-            min-height: 100vh;
-        }
-        
-        .blog-container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 40px 20px 80px;
-        }
-        
-        .back-nav {
-            margin-bottom: 40px;
-        }
-        
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 500;
-            padding: 12px 20px;
-            border: 2px solid rgba(102, 126, 234, 0.2);
-            border-radius: 30px;
-            transition: all 0.3s ease;
-            font-size: 0.95rem;
-        }
-        
-        .back-link:hover {
-            background: #667eea;
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-        }
-        
-        .article-content {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
-            overflow: hidden;
-        }
-        
-        .article-body {
-            padding: 50px 60px;
-        }
-        
-        .article-body h1 {
-            font-size: 2.8rem;
-            font-weight: 800;
-            color: #333;
-            line-height: 1.2;
-            margin-bottom: 20px;
-        }
-        
-        .article-meta {
-            color: #667eea;
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 3px solid #f8f9fa;
-        }
-        
-        .post-categories-header {
-            margin: 20px 0 30px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-        
-        .post-category-tag {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 0.4rem 1rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-decoration: none;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            transition: all 0.3s ease;
-        }
-        
-        .post-category-tag:hover {
-            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-        }
-        
-        .article-excerpt {
-            font-size: 1.3rem;
-            color: #667eea;
-            font-style: italic;
-            line-height: 1.6;
-            margin-bottom: 40px;
-            padding: 25px;
-            background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
-            border-radius: 15px;
-            border-left: 6px solid #667eea;
-        }
-        
-        .article-body h2 {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #667eea;
-            margin: 40px 0 20px;
-            line-height: 1.3;
-        }
-        
-        .article-body h3 {
-            font-size: 1.4rem;
-            font-weight: 600;
-            color: #764ba2;
-            margin: 35px 0 15px;
-            line-height: 1.3;
-        }
-        
-        .article-body h4 {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #333;
-            margin: 30px 0 12px;
-            line-height: 1.3;
-        }
-        
-        .article-body h5 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #555;
-            margin: 25px 0 10px;
-            line-height: 1.3;
-        }
-        
-        .article-body h6 {
-            font-size: 1rem;
-            font-weight: 600;
-            color: #666;
-            margin: 20px 0 8px;
-            line-height: 1.3;
-        }
-        
-        .article-body p {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            color: #444;
-            margin-bottom: 25px;
-        }
-        
-        .article-body ul, .article-body ol {
-            margin: 25px 0;
-            padding-left: 30px;
-        }
-        
-        .article-body li {
-            font-size: 1.1rem;
-            line-height: 1.7;
-            color: #444;
-            margin-bottom: 12px;
-        }
-        
-        .article-body blockquote {
-            border-left: 6px solid #667eea;
-            padding: 25px 30px;
-            margin: 35px 0;
-            background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
-            font-style: italic;
-            color: #555;
-            border-radius: 0 15px 15px 0;
-            font-size: 1.15rem;
-            line-height: 1.7;
-        }
-        
-        .article-body strong {
-            font-weight: 700;
-            color: #333;
-        }
-        
-        .article-body em {
-            font-style: italic;
-            color: #667eea;
-        }
-        
-        .article-body code {
-            background: #f8f9fa;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-family: 'Monaco', 'Menlo', monospace;
-            font-size: 0.9em;
-            color: #764ba2;
-        }
-        
-        .post-categories-header {
-    margin: 20px 0 30px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-}
-
-.post-category-tag {
-    display: inline-block;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 0.4rem 1rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    text-decoration: none;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    transition: all 0.3s ease;
-}
-
-.post-category-tag:hover {
-    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-}
-        
-        /* Mobile responsive */
-        @media (max-width: 768px) {
-            .blog-main {
-                padding-top: 80px;
-            }
-            
-            .blog-container {
-                padding: 20px 15px 60px;
-            }
-            
-            .article-body {
-                padding: 30px 25px;
-            }
-            
-            .article-body h1 {
-                font-size: 2.2rem;
-            }
-            
-            .article-body h2 {
-                font-size: 1.6rem;
-            }
-            
-            .article-body h3 {
-                font-size: 1.3rem;
-            }
-            
-            .article-excerpt {
-                font-size: 1.1rem;
-                padding: 20px;
-            }
-            
-            .article-body p,
-            .article-body li {
-                font-size: 1rem;
-            }
-        }
-    </style>
 </head>
 <body>
     <header>
