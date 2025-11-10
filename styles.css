@@ -1255,3 +1255,170 @@ nav {
         font-size: 1rem;
     }
 }
+
+/* Custom Block Styles */
+
+/* Shared block styling */
+.ai-prompt,
+.code-block,
+.tip,
+.warning,
+.field-notes,
+.key-takeaways,
+.pro-tip {
+    margin: 30px 0;
+    padding: 25px 30px;
+    border-radius: 10px;
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.block-icon {
+    font-size: 1.8rem;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+.block-content {
+    flex: 1;
+}
+
+.block-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+/* AI Prompt - Blue */
+.ai-prompt {
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    border-left: 6px solid #2196f3;
+}
+
+.ai-prompt .block-title {
+    color: #1565c0;
+}
+
+.ai-prompt .block-content {
+    font-family: 'Monaco', 'Menlo', monospace;
+    font-size: 0.95rem;
+    background: rgba(255, 255, 255, 0.5);
+    padding: 15px;
+    border-radius: 8px;
+}
+
+/* Code Block - Dark */
+.code-block {
+    background: #2d2d2d;
+    color: #f8f8f2;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.code-block::before {
+    content: attr(data-language);
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.code-block pre {
+    margin: 0;
+    padding: 25px;
+    overflow-x: auto;
+    background: transparent;
+    border: none;
+}
+
+.code-block code {
+    color: #f8f8f2;
+    background: transparent;
+    padding: 0;
+    font-family: 'Monaco', 'Menlo', monospace;
+}
+
+/* Tip - Yellow/Gold */
+.tip {
+    background: linear-gradient(135deg, #fff9e6 0%, #fff4d0 100%);
+    border-left: 6px solid #f39c12;
+}
+
+.tip .block-title {
+    color: #e67e22;
+}
+
+/* Warning - Red */
+.warning {
+    background: linear-gradient(135deg, #fff0f0 0%, #ffe6e6 100%);
+    border-left: 6px solid #e74c3c;
+}
+
+.warning .block-title {
+    color: #c0392b;
+}
+
+/* Field Notes - Green */
+.field-notes {
+    background: linear-gradient(135deg, #e8f5e9 0%, #dcedc8 100%);
+    border-left: 6px solid #4caf50;
+}
+
+.field-notes .block-title {
+    color: #2e7d32;
+}
+
+/* Key Takeaways - Orange */
+.key-takeaways {
+    background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+    border-left: 6px solid #ff9800;
+}
+
+.key-takeaways .block-title {
+    color: #e65100;
+}
+
+/* Pro Tip - Purple */
+.pro-tip {
+    background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+    border-left: 6px solid #9c27b0;
+}
+
+.pro-tip .block-title {
+    color: #6a1b9a;
+}
+
+/* Mobile adjustments for custom blocks */
+@media (max-width: 768px) {
+    .ai-prompt,
+    .code-block,
+    .tip,
+    .warning,
+    .field-notes,
+    .key-takeaways,
+    .pro-tip {
+        padding: 20px;
+        gap: 12px;
+        margin: 25px 0;
+    }
+    
+    .block-icon {
+        font-size: 1.5rem;
+    }
+    
+    .block-title {
+        font-size: 1rem;
+    }
+    
+    .code-block pre {
+        padding: 20px;
+        font-size: 0.85rem;
+    }
+}
