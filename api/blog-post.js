@@ -291,13 +291,13 @@ function blocksToHtml(blocks) {
         listType = null;
       }
       
-      const content = block.body ? blocksToHtml(block.body) : block.text || '';
+      const content = block.content || '';
       html += `
         <div class="ai-prompt">
           <div class="block-icon">🤖</div>
           <div class="block-content">
             <div class="block-title">AI Prompt</div>
-            ${content}
+            <p>${content}</p>
           </div>
         </div>
       `;
@@ -328,13 +328,13 @@ function blocksToHtml(blocks) {
         listType = null;
       }
       
-      const content = block.body ? blocksToHtml(block.body) : block.text || '';
+      const content = block.content || '';
       html += `
         <div class="tip">
           <div class="block-icon">💡</div>
           <div class="block-content">
             <div class="block-title">Tip</div>
-            ${content}
+            <p>${content}</p>
           </div>
         </div>
       `;
@@ -348,13 +348,13 @@ function blocksToHtml(blocks) {
         listType = null;
       }
       
-      const content = block.body ? blocksToHtml(block.body) : block.text || '';
+      const content = block.content || '';
       html += `
         <div class="warning">
           <div class="block-icon">⚠️</div>
           <div class="block-content">
             <div class="block-title">Warning</div>
-            ${content}
+            <p>${content}</p>
           </div>
         </div>
       `;
@@ -368,13 +368,13 @@ function blocksToHtml(blocks) {
         listType = null;
       }
       
-      const content = block.body ? blocksToHtml(block.body) : block.text || '';
+      const content = block.content || '';
       html += `
         <div class="field-notes">
           <div class="block-icon">📝</div>
           <div class="block-content">
             <div class="block-title">Field Notes</div>
-            ${content}
+            <p>${content}</p>
           </div>
         </div>
       `;
@@ -388,13 +388,13 @@ function blocksToHtml(blocks) {
         listType = null;
       }
       
-      const content = block.body ? blocksToHtml(block.body) : block.text || '';
+      const content = block.content || '';
       html += `
         <div class="key-takeaways">
           <div class="block-icon">🎯</div>
           <div class="block-content">
             <div class="block-title">Key Takeaways</div>
-            ${content}
+            <p>${content}</p>
           </div>
         </div>
       `;
@@ -408,13 +408,13 @@ function blocksToHtml(blocks) {
         listType = null;
       }
       
-      const content = block.body ? blocksToHtml(block.body) : block.text || '';
+      const content = block.content || '';
       html += `
         <div class="pro-tip">
           <div class="block-icon">⭐</div>
           <div class="block-content">
             <div class="block-title">Pro Tip</div>
-            ${content}
+            <p>${content}</p>
           </div>
         </div>
       `;
